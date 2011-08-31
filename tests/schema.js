@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 var assert = require('assert')
    ,sqlite = require('sqlite')
    ,schema = require('../lib/schema');
