@@ -1,6 +1,6 @@
 var assert = require('assert')
    ,sqlite = require('sqlite')
-   ,schema = require('./lib/schema');
+   ,schema = require('../lib/schema');
 
 var a1 = new schema.attribute("a1","int");
 var a2 = new schema.attribute("a2","char(10)");
