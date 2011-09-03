@@ -17,7 +17,7 @@
  "scripts": { "test" : "node ./tests/schema.js" },
 
  "repository" : {
-  "type" : "git"
- , "url" : "ssh://mf-lex2.dyndns.org/Groups/dvlp/git/de.mfelten.npm.sorm"
+  "type" : "git",
+  "url"  : "ssh://mf-lex2.dyndns.org/Groups/dvlp/git/de.mfelten.npm.sorm"
   }
 }

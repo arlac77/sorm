@@ -42,6 +42,12 @@ var s1a = new schema.schema({
                 { "name" : "a1", "type" : "int", "constraints" : [ "not null" ] },
                 { "name" : "a2", "type" : "char(10)" }]
         }
-    }
+    },
+    "migrations" : {
+        "37130897e3628af46c4bd6df9850ef8a8277bf34" : {
+            "statements" : [
+            ]
+        }
+    },
 });
 
