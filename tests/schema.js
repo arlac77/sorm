@@ -30,19 +30,22 @@ db.open("test.db", function (error) {
   if (error) { throw error; }
 
   s1.create(db);
+
+  //db.close(function(error) { console.log("close:" + error);});
   }
 );
 
 
 var s1a = new schema.schema({
     "name" : "s1",
-    "tables" : {
-        "t1" : {
+    "tables" : [
+        {
+            "name"       : "t1",
             "attributes" : [
                 { "name" : "a1", "type" : "int", "constraints" : [ "not null" ] },
                 { "name" : "a2", "type" : "char(10)" }]
         }
-    },
+    ],
     "migrations" : {
         "37130897e3628af46c4bd6df9850ef8a8277bf34" : {
             "statements" : [
@@ -50,4 +53,15 @@ var s1a = new schema.schema({
         }
     },
 });
+
+assert.equal(s1a.tables[0].name,"t1");
+
+/*
+db.open("test2.db", function (error) {
+  if (error) { throw error; }
+
+  s1a.create(db);
+  }
+);
+*/
 
