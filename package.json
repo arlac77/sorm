@@ -9,7 +9,7 @@
             },
 
  "dependencies" : {
- "step"          : ">=0.0.4",
+ "slide"         : ">=1.1.3",
  "sqlite"        : ">=1.0.4"
  },
 
