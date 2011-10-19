@@ -1,9 +1,9 @@
 {
  "name" : "sorm",
  "description": "Simple Object Relational Mapper with Node JS",
- "version" : "0.0.1",
+ "version" : "0.1.2",
  "private":  true,
- "keywords": ["sqlite","schema"],
+ "keywords": ["sqlite3","schema"],
  "engines": { "node"  : ">= 0.4.0" },
  "author" : { "name"  : "Markus Felten"
             , "email" : "Markus.Felten@gmx.de"
