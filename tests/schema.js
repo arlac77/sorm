@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-var assert = require('assert')
-   ,sqlite = require('sqlite')
-   ,schema = require('../lib/schema');
+var assert  = require('assert')
+   ,sqlite3 = require('sqlite3')
+   ,schema  = require('../lib/schema');
 
 var a1 = new schema.attribute("a1","int", [new schema.constraint("not null")]);
 assert.equal(a1.name, "a1", "attribute name must be a1");
@@ -24,17 +24,9 @@ assert.equal(t1.name, "t1", "table name must be t1");
 assert.equal(t1.create(), "CREATE TABLE t1(a1 int not null primary key,a2 char(10))");
 
 
-var db = new sqlite.Database();
-
-db.open("test.db", function (error) {
-  if (error) { throw error; }
-
-  s1.create(db);
-
-  //db.close(function(error) { console.log("close:" + error);});
-  }
-);
-
+var db     = new sqlite3.Database("test.db", function(error) {
+    if(error) { console.log(error); } else
+    { s1.create(db); } });
 
 var s1a = new schema.schema({
     "name" : "s1",
