@@ -12,7 +12,7 @@
 
  "dependencies" : {
  "async"         : ">=0.1.15",
- "sqlite3"       : ">=2.0.17"
+ "sqlite3"       : ">=2.1"
  },
 
  "main": "lib/schema.js",
