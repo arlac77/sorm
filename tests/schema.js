@@ -28,7 +28,9 @@ assert.equal(t1.create(), "CREATE TABLE t1(a1 int not null primary key,a2 char(1
 
 var db     = new sqlite3.Database("test.db", function(error) {
     if(error) { console.log(error); } else
-    { s1.create(db); } });
+    { s1.create(db, function(error) {
+        if(error) { console.log(error); }
+        }); } });
 
 var s1a = new schema.schema({
     "name" : "s1",
@@ -64,3 +66,4 @@ assert.equal(s1a.tables[1].pk().length,2);
 assert.equal(s1a.tables[1].pk()[0].name,"a1");
 assert.equal(s1a.tables[1].pk()[1].name,"a2");
 
+assert.equal(s1a.table("t1").name,"t1", "find table by name");

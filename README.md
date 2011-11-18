@@ -24,10 +24,3 @@ included LICENSE file for more details.
 
 This is mine; not my employer's, not Node's, not Joyent's, not Ryan
 Dahl's.
-
-## SEE ALSO
-
-* npm(1)
-* npm-faq(1)
-* npm-help(1)
-* npm-index(1)
