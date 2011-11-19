@@ -4,7 +4,7 @@
  "version" : "0.1.3",
  "private":  true,
  "keywords": ["sqlite3","schema"],
- "engines": { "node"  : ">= 0.4.0" },
+ "engines": { "node"  : ">= 0.6" },
  "author" : { "name"  : "Markus Felten"
             , "email" : "Markus.Felten@gmx.de"
             },
@@ -16,7 +16,7 @@
 
  "main": "lib/schema.js",
 
- "scripts": { "test" : "node ./tests/schema.js" },
+ "scripts": { "test" : "vows tests/*" },
 
  "repository" : {
   "type" : "git",
