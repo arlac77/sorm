@@ -16,7 +16,7 @@
 
  "main": "lib/schema.js",
 
- "scripts": { "test" : "vows tests/*" },
+ "scripts": { "test" : "node tests/simple.js" },
 
  "repository" : {
   "type" : "git",
