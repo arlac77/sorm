@@ -4,16 +4,7 @@ var assert  = require('assert')
    ,sqlite3 = require('sqlite3')
    ,schema  = require('../lib/schema');
 
-var a1 = new schema.attribute("a1","int", [new schema.constraint("not null")]);
-assert.equal(a1.name, "a1", "attribute name must be a1");
-assert.equal(a1.create(), "a1 int not null");
-
-var a1 = new schema.attribute("a1","int", "not null");
-assert.equal(a1.create(), "a1 int not null");
-
 var a1 = new schema.attribute("a1","int", ["not null", "primary key"]);
-assert.equal(a1.create(), "a1 int not null primary key");
-
 var a2 = new schema.attribute("a2","char(10)");
 var t1 = new schema.table("t1",[a1,a2]);
 var s1 = new schema.schema([t1]);

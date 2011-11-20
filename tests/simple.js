@@ -14,6 +14,29 @@ vows.describe('Attribute').addBatch({
         },
         'constraint is present': function (topic) {
             assert.equal (topic.constraints[0].name, "not null");
+        },
+        'sql statement': function (topic) {
+            assert.equal (topic.create(), "a1 int not null");
         }
-    }
+    },
+    'Attribute Values Multiple Constraints': {
+        topic:  new schema.attribute("a1","int", ["not null", "primary key"]),
+
+        'name is present': function (topic) {
+            assert.equal (topic.name, "a1");
+        },
+        'type is present': function (topic) {
+            assert.equal (topic.type, "int");
+        },
+        '1. constraint is present': function (topic) {
+            assert.equal (topic.constraints[0].name, "not null");
+        },
+        '2. constraint is present': function (topic) {
+            assert.equal (topic.constraints[1].name, "primary key");
+        },
+        'sql statement': function (topic) {
+            assert.equal (topic.create(), "a1 int not null primary key");
+        }
+    },
+
 }).export(module);
