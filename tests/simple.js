@@ -53,6 +53,22 @@ vows.describe('Attribute').addBatch({
         'sql statement': function (topic) {
             assert.equal (topic.create(), "a1 int not null primary key");
         }
-    },
+    }
+}).export(module);
 
+
+vows.describe('Tables').addBatch({
+    'Table Values': {
+        topic:  new schema.table("t1",[new schema.attribute("a1","int",["not null", "primary key"]),new schema.attribute("a2","char(10)")]),
+
+        'name is present': function (topic) {
+            assert.equal (topic.name, "t1");
+        },
+        'find attribute by name': function (topic) {
+            assert.equal (topic.attribute("a2").name, "a2");
+        },
+        'sql statement': function (topic) {
+            assert.equal (topic.create(), "CREATE TABLE t1(a1 int not null primary key,a2 char(10))");
+        }
+    }
 }).export(module);

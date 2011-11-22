@@ -10,13 +10,6 @@ var t1 = new schema.table("t1",[a1,a2]);
 var s1 = new schema.schema([t1]);
 
 
-assert.ok(t1, "table must exist");
-assert.equal(t1.name, "t1", "table name must be t1");
-assert.equal(t1.attribute("a1").name, "a1", "find attribute a1");
-
-assert.equal(t1.create(), "CREATE TABLE t1(a1 int not null primary key,a2 char(10))");
-
-
 var db     = new sqlite3.Database("test.db", function(error) {
     if(error) { console.log(error); } else
     { s1.create(db, function(error) {

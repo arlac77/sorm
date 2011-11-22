@@ -19,8 +19,3 @@ rights not explicitly granted in the MIT license are reserved. See the
 included LICENSE file for more details.
 
 "Node.js" and "node" are trademarks owned by Joyent, Inc.
-
-### In plain english
-
-This is mine; not my employer's, not Node's, not Joyent's, not Ryan
-Dahl's.
