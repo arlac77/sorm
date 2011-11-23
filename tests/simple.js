@@ -67,8 +67,17 @@ vows.describe('Tables').addBatch({
         'find attribute by name': function (topic) {
             assert.equal (topic.attribute("a2").name, "a2");
         },
-        'sql statement': function (topic) {
+        'primary key': function (topic) {
+            assert.equal (topic.pk()[0].name, "a1");
+        },
+        'sql create statement': function (topic) {
             assert.equal (topic.create(), "CREATE TABLE t1(a1 int not null primary key,a2 char(10))");
+        },
+        'sql insert statement': function (topic) {
+            assert.equal (topic.insert_sql(['a1','a2']), "INSERT INTO t1(a1,a2) VALUES(?,?)");
+        },
+        'sql update statement': function (topic) {
+            assert.equal (topic.update_sql(['a1','a2']), "UPDATE t1 SET a2=? WHERE a1=?");
         }
     }
 }).export(module);
