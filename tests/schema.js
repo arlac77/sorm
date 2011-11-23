@@ -4,18 +4,6 @@ var assert  = require('assert')
    ,sqlite3 = require('sqlite3')
    ,schema  = require('../lib/schema');
 
-var a1 = new schema.attribute("a1","int", ["not null", "primary key"]);
-var a2 = new schema.attribute("a2","char(10)");
-var t1 = new schema.table("t1",[a1,a2]);
-var s1 = new schema.schema([t1]);
-
-
-var db     = new sqlite3.Database("test.db", function(error) {
-    if(error) { console.log(error); } else
-    { s1.create(db, function(error) {
-        if(error) { console.log(error); }
-        }); } });
-
 var s1a = new schema.schema({
     "name" : "s1",
     "tables" : [
@@ -40,6 +28,12 @@ var s1a = new schema.schema({
         }
     },
 });
+
+var db     = new sqlite3.Database("test.db", function(error) {
+    if(error) { console.log(error); } else
+    { s1a.create(db, function(error) {
+        if(error) { console.log(error); }
+        }); } });
 
 assert.equal(s1a.tables[0].name,"t1");
 assert.equal(s1a.tables[1].name,"t2");

@@ -81,3 +81,13 @@ vows.describe('Tables').addBatch({
         }
     }
 }).export(module);
+
+vows.describe('Schema').addBatch({
+    'Schema Values': {
+        topic:  new schema.schema([new schema.table("t1",[new schema.attribute("a1","int",["not null", "primary key"]),new schema.attribute("a2","char(10)")])]),
+
+        'find table by name': function (topic) {
+            assert.equal (topic.table("t1").name, "t1");
+        }
+    }
+}).export(module);
