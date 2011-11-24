@@ -1,5 +1,6 @@
 var vows = require('vows'),
     assert = require('assert'),
+    sqlite3 = require('sqlite3'),
     schema  = require('../lib/schema');
 
 vows.describe('Attribute').addBatch({
@@ -19,7 +20,7 @@ vows.describe('Attribute').addBatch({
             assert.equal (topic.create(), "a1 int");
         }
     },
-    'Attribute Values With Contraint': {
+    'Attribute Values With Constraint': {
         topic:  new schema.attribute("a1","int", [new schema.constraint("not null")]),
 
         'name is present': function (topic) {
@@ -88,6 +89,23 @@ vows.describe('Schema').addBatch({
 
         'find table by name': function (topic) {
             assert.equal (topic.table("t1").name, "t1");
+        },
+
+        'create database' : {
+            topic : function() { return new sqlite3.Database("test.db", this.callback); },
+            'create schema in database' : function(error,db) {
+               // console.log("topic: " + topic);
+                assert.isNull(error);
+            }
         }
+        /*,
+        'create database x' : function(topic) {
+            var db     = new sqlite3.Database("test.db", function(error) {
+                assert.isNull(error);
+
+                { topic.create(db, function(error) {
+                    if(error) { console.log(error); }
+                }); } });
+        }*/
     }
 }).export(module);
