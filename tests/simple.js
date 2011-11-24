@@ -85,27 +85,20 @@ vows.describe('Tables').addBatch({
 
 vows.describe('Schema').addBatch({
     'Schema Values': {
-        topic:  new schema.schema([new schema.table("t1",[new schema.attribute("a1","int",["not null", "primary key"]),new schema.attribute("a2","char(10)")])]),
-
+        topic:  function() { return new schema.schema([
+            new schema.table("t1",[
+                new schema.attribute("a1","int",["not null", "primary key"]),
+                new schema.attribute("a2","char(10)")])]);
+        },
         'find table by name': function (topic) {
             assert.equal (topic.table("t1").name, "t1");
         },
-
-        'create database' : {
-            topic : function() { return new sqlite3.Database("test.db", this.callback); },
-            'create schema in database' : function(error,db) {
-               // console.log("topic: " + topic);
+        'create database with schema' : {
+            topic : function(schema) { var db = new sqlite3.Database("test.db"); schema.create(db,{},this.callback); },
+            'create schema in database' : function(error,schema) {
                 assert.isNull(error);
+                assert.isObject(schema);
             }
         }
-        /*,
-        'create database x' : function(topic) {
-            var db     = new sqlite3.Database("test.db", function(error) {
-                assert.isNull(error);
-
-                { topic.create(db, function(error) {
-                    if(error) { console.log(error); }
-                }); } });
-        }*/
     }
 }).export(module);
