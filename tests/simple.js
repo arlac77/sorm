@@ -95,9 +95,11 @@ vows.describe('Schema').addBatch({
         },
         'create database with schema' : {
             topic : function(schema) { var db = new sqlite3.Database("test.db"); schema.create(db,{},this.callback); },
-            'create schema in database' : function(error,schema) {
+            'create schema in database' : function(error,schema,db) {
                 assert.isNull(error);
                 assert.isObject(schema);
+                assert.isObject(db);
+                assert.equal(schema.presentSchemaVersion,schema.desiredSchemaVersion);
             }
         }
     }
