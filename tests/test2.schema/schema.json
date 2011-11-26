@@ -1,0 +1,11 @@
+{
+    "name" : "test1",
+    "tables" : [
+        {
+            "name"       : "t1",
+            "attributes" : [
+                { "name" : "name",       "type" : "varchar(64)",  "constraints" : [ "primary key", "not null" ] }
+                ]
+        }
+    ]
+}

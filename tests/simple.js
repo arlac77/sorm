@@ -94,7 +94,7 @@ vows.describe('Schema').addBatch({
             assert.equal (topic.table("t1").name, "t1");
         },
         'create database with schema' : {
-            topic : function(schema) { var db = new sqlite3.Database("test.db"); schema.create(db,{},this.callback); },
+            topic : function(schema) { var db = new sqlite3.Database("test1.db"); schema.create(db,{},this.callback); },
             'create schema in database' : function(error,schema,db) {
                 assert.isNull(error);
                 assert.isObject(schema);
@@ -104,3 +104,23 @@ vows.describe('Schema').addBatch({
         }
     }
 }).export(module);
+
+vows.describe('Schema From File').addBatch({
+    'Schema Values': {
+        topic:  function() { return new schema.schema("tests/test2.schema");
+        },
+        'find table by name': function (topic) {
+            assert.equal (topic.table("t1").name, "t1");
+        },
+        'create database with schema' : {
+            topic : function(schema) { var db = new sqlite3.Database("test2.db"); schema.create(db,{},this.callback); },
+            'create schema in database' : function(error,schema,db) {
+                assert.isNull(error);
+                assert.isObject(schema);
+                assert.isObject(db);
+                assert.equal(schema.presentSchemaVersion,schema.desiredSchemaVersion);
+            }
+        }
+    }
+}).export(module);
+
