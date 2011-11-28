@@ -93,13 +93,16 @@ vows.describe('Schema').addBatch({
         'find table by name': function (topic) {
             assert.equal (topic.table("t1").name, "t1");
         },
+        'schema hash': function (topic) {
+            assert.equal(topic.schemaHash(),"37130897e3628af46c4bd6df9850ef8a8277bf34");
+        },
         'create database with schema' : {
-            topic : function(schema) { var db = new sqlite3.Database("test1.db"); schema.create(db,{},this.callback); },
+            topic : function(schema) { var db = new sqlite3.Database("tests/test1.db"); schema.create(db,{},this.callback); },
             'create schema in database' : function(error,schema,db) {
                 assert.isNull(error);
                 assert.isObject(schema);
                 assert.isObject(db);
-                assert.equal(schema.presentSchemaVersion,schema.desiredSchemaVersion);
+                //assert.equal(schema.presentSchemaVersion,"37130897e3628af46c4bd6df9850ef8a8277bf34");
             }
         }
     }
@@ -120,8 +123,11 @@ vows.describe('Schema From File').addBatch({
             assert.equal (a1.constraints[0].name, "primary key");
             assert.equal (a1.constraints[1].name, "not null");
         },
+        'schema hash': function (topic) {
+            assert.equal(topic.schemaHash(),"de6a2a2ac5d77cc905fefa140c9a5fb14d354f31");
+        },
         'create database with schema' : {
-            topic : function(schema) { var db = new sqlite3.Database("test2.db"); schema.create(db,{},this.callback); },
+            topic : function(schema) { var db = new sqlite3.Database("tests/test2.db"); schema.create(db,{},this.callback); },
             'create schema in database' : function(error,schema,db) {
                 assert.isNull(error);
                 assert.isObject(schema);
