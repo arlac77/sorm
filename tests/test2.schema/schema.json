@@ -4,7 +4,7 @@
         {
             "name"       : "t1",
             "attributes" : [
-                { "name" : "name",       "type" : "varchar(64)",  "constraints" : [ "primary key", "not null" ] }
+                { "name" : "a1",       "type" : "char(16)",  "constraints" : [ "primary key", "not null" ] }
                 ]
         }
     ]

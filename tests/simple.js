@@ -112,6 +112,14 @@ vows.describe('Schema From File').addBatch({
         'find table by name': function (topic) {
             assert.equal (topic.table("t1").name, "t1");
         },
+        'schema table attributes are there': function (topic) {
+            var t1 = topic.table("t1");
+            var a1 = t1.attribute("a1");
+            assert.equal (a1.name, "a1");
+            assert.equal (a1.type, "char(16)");
+            assert.equal (a1.constraints[0].name, "primary key");
+            assert.equal (a1.constraints[1].name, "not null");
+        },
         'create database with schema' : {
             topic : function(schema) { var db = new sqlite3.Database("test2.db"); schema.create(db,{},this.callback); },
             'create schema in database' : function(error,schema,db) {
