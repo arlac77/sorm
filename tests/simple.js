@@ -132,7 +132,32 @@ vows.describe('Schema From File').addBatch({
                 assert.isNull(error);
                 assert.isObject(schema);
                 assert.isObject(db);
-                assert.equal(schema.presentSchemaVersion,schema.desiredSchemaVersion);
+            }
+        }
+    }
+}).addBatch({
+    'Schema Migration': {
+        topic:  function() { return new schema.schema("tests/test3.schema");
+        },
+        'schema hash': function (topic) {
+            assert.equal(topic.schemaHash(),"767ea2680d940973a8408703a4a056f27708aab7");
+        },
+        'schema table attributes are there': function (topic) {
+            assert.equal(topic.tables[0].name,"t1");
+            assert.equal(topic.tables[1].name,"t2");
+            assert.equal(topic.tables[0].pk().length,1);
+            assert.equal(topic.tables[0].pk()[0].name,"a1");
+
+            assert.equal(topic.tables[1].pk().length,2);
+            assert.equal(topic.tables[1].pk()[0].name,"a1");
+            assert.equal(topic.tables[1].pk()[1].name,"a2");
+        },
+        'create database with schema' : {
+            topic : function(schema) { var db = new sqlite3.Database("tests/test2.db"); schema.create(db,{},this.callback); },
+            'create schema in database' : function(error,schema,db) {
+                assert.isNull(error);
+                assert.isObject(schema);
+                assert.isObject(db);
             }
         }
     }
