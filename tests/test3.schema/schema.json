@@ -1,5 +1,6 @@
 {
     "name" : "test1",
+    "version" : 2,
     "tables" : [
         {
             "name"       : "t1",

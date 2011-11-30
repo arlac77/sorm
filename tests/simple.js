@@ -112,6 +112,12 @@ vows.describe('Schema From File').addBatch({
     'Schema Values': {
         topic:  function() { return new schema.schema("tests/test2.schema");
         },
+        'schema name': function (topic) {
+            assert.equal (topic.name, "test1");
+        },
+        'schema version': function (topic) {
+            assert.equal (topic.version, 1);
+        },
         'find table by name': function (topic) {
             assert.equal (topic.table("t1").name, "t1");
         },
@@ -142,6 +148,9 @@ vows.describe('Schema From File').addBatch({
         'schema hash': function (topic) {
             assert.equal(topic.schemaHash(),"767ea2680d940973a8408703a4a056f27708aab7");
         },
+        'schema version': function (topic) {
+            assert.equal (topic.version, 2);
+        },
         'schema table attributes are there': function (topic) {
             assert.equal(topic.tables[0].name,"t1");
             assert.equal(topic.tables[1].name,"t2");
@@ -158,6 +167,14 @@ vows.describe('Schema From File').addBatch({
                 assert.isNull(error);
                 assert.isObject(schema);
                 assert.isObject(db);
+                
+                // TODO how to include this in vows?
+                db.all("SELECT name,sql FROM sqlite_master WHERE type='table' AND name=?",'t1',function(error, rows) {
+                    console.log(rows[0].name);
+                });
+                db.all("SELECT name,sql FROM sqlite_master WHERE type='table' AND name=?",'t2',function(error, rows) {
+                    console.log(rows[0].name);
+                });
             }
         }
     }
