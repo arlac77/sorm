@@ -167,14 +167,20 @@ vows.describe('Schema From File').addBatch({
                 assert.isNull(error);
                 assert.isObject(schema);
                 assert.isObject(db);
-                
-                // TODO how to include this in vows?
-                db.all("SELECT name,sql FROM sqlite_master WHERE type='table' AND name=?",'t1',function(error, rows) {
-                    console.log(rows[0].name);
-                });
-                db.all("SELECT name,sql FROM sqlite_master WHERE type='table' AND name=?",'t2',function(error, rows) {
-                    console.log(rows[0].name);
-                });
+            },
+            't1 present' : {
+                topic: function(schema) { var db = new sqlite3.Database("tests/test2.db");
+                                          db.all("SELECT name,sql FROM sqlite_master WHERE type='table' AND name=?",'t1',this.callback); },
+                't1 present': function (error,rows) {
+                    assert(rows[0].name,'t1');
+                }
+            },
+            't2 present' : {
+                topic: function(schema) { var db = new sqlite3.Database("tests/test2.db");
+                                          db.all("SELECT name,sql FROM sqlite_master WHERE type='table' AND name=?",'t2',this.callback); },
+                't1 present': function (error,rows) {
+                    assert(rows[0].name,'t2');
+                }
             }
         }
     }
