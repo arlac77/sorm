@@ -99,7 +99,7 @@ vows.describe('Schema').addBatch({
         'create database with schema' : {
             topic : function(schema) { var db = new sqlite3.Database("tests/test1.db"); schema.create(db,{},this.callback); },
             'create schema in database' : function(error,schema,db) {
-                assert.isNull(error);
+                assert.ifError(error);
                 assert.isObject(schema);
                 assert.isObject(db);
                 //assert.equal(schema.presentSchemaVersion,"37130897e3628af46c4bd6df9850ef8a8277bf34");
@@ -108,6 +108,7 @@ vows.describe('Schema').addBatch({
                 topic: function(schema) { var db = new sqlite3.Database("tests/test2.db");
                                           db.all("SELECT name,sql FROM sqlite_master WHERE type='table' AND name=?",'t1',this.callback); },
                 't1 present': function (error,rows) {
+                    assert.ifError(error);
                     assert.equal(rows[0].name,'t1');
                 }
             }
@@ -142,7 +143,7 @@ vows.describe('Schema From File').addBatch({
         'create database with schema' : {
             topic : function(schema) { var db = new sqlite3.Database("tests/test2.db"); schema.create(db,{},this.callback); },
             'create schema in database' : function(error,schema,db) {
-                assert.isNull(error);
+                assert.ifError(error);
                 assert.isObject(schema);
                 assert.isObject(db);
             }
@@ -171,7 +172,7 @@ vows.describe('Schema From File').addBatch({
         'create database with schema' : {
             topic : function(schema) { var db = new sqlite3.Database("tests/test2.db"); schema.create(db,{},this.callback); },
             'create schema in database' : function(error,schema,db) {
-                assert.isNull(error);
+                assert.ifError(error);
                 assert.isObject(schema);
                 assert.isObject(db);
             },
@@ -179,6 +180,7 @@ vows.describe('Schema From File').addBatch({
                 topic: function(schema) { var db = new sqlite3.Database("tests/test2.db");
                                           db.all("SELECT name,sql FROM sqlite_master WHERE type='table' AND name=?",'t1',this.callback); },
                 't1 present': function (error,rows) {
+                    assert.ifError(error);
                     assert.equal(rows[0].name,'t1');
                 }
             },
@@ -186,6 +188,7 @@ vows.describe('Schema From File').addBatch({
                 topic: function(schema) { var db = new sqlite3.Database("tests/test2.db");
                                           db.all("SELECT name,sql FROM sqlite_master WHERE type='table' AND name=?",'t2',this.callback); },
                 't1 present': function (error,rows) {
+                    assert.ifError(error);
                     assert.equal(rows[0].name,'t2');
                 }
             }
