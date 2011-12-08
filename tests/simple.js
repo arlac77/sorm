@@ -5,7 +5,7 @@ var vows = require('vows'),
 
 vows.describe('Attribute').addBatch({
     'Attribute Values': {
-        topic:  new schema.attribute("a1","int"),
+        topic:  new schema.Attribute("a1","int"),
 
         'name is present': function (topic) {
             assert.equal (topic.name, "a1");
@@ -21,7 +21,7 @@ vows.describe('Attribute').addBatch({
         }
     },
     'Attribute Values With Constraint': {
-        topic:  new schema.attribute("a1","int", [new schema.constraint("not null")]),
+        topic:  new schema.Attribute("a1","int", [new schema.Constraint("not null")]),
 
         'name is present': function (topic) {
             assert.equal (topic.name, "a1");
@@ -37,7 +37,7 @@ vows.describe('Attribute').addBatch({
         }
     },
     'Attribute Values Multiple Constraints': {
-        topic:  new schema.attribute("a1","int", ["not null", "primary key"]),
+        topic:  new schema.Attribute("a1","int", ["not null", "primary key"]),
 
         'name is present': function (topic) {
             assert.equal (topic.name, "a1");
@@ -60,7 +60,7 @@ vows.describe('Attribute').addBatch({
 
 vows.describe('Tables').addBatch({
     'Table Values': {
-        topic:  new schema.table("t1",[new schema.attribute("a1","int",["not null", "primary key"]),new schema.attribute("a2","char(10)")]),
+        topic:  new schema.Table("t1",[new schema.Attribute("a1","int",["not null", "primary key"]),new schema.Attribute("a2","char(10)")]),
 
         'name is present': function (topic) {
             assert.equal (topic.name, "t1");
@@ -85,10 +85,10 @@ vows.describe('Tables').addBatch({
 
 vows.describe('Schema').addBatch({
     'Schema Values': {
-        topic:  function() { return new schema.schema([
-            new schema.table("t1",[
-                new schema.attribute("a1","int",["not null", "primary key"]),
-                new schema.attribute("a2","char(10)")])]);
+        topic:  function() { return new schema.Schema([
+            new schema.Table("t1",[
+                new schema.Attribute("a1","int",["not null", "primary key"]),
+                new schema.Attribute("a2","char(10)")])]);
         },
         'find table by name': function (topic) {
             assert.equal (topic.table("t1").name, "t1");
@@ -118,7 +118,7 @@ vows.describe('Schema').addBatch({
 
 vows.describe('Schema From File').addBatch({
     'Schema Values': {
-        topic:  function() { return new schema.schema("tests/test2.schema");
+        topic:  function() { return new schema.Schema("tests/test2.schema");
         },
         'schema name': function (topic) {
             assert.equal (topic.name, "test1");
@@ -151,7 +151,7 @@ vows.describe('Schema From File').addBatch({
     }
 }).addBatch({
     'Schema Migration': {
-        topic:  function() { return new schema.schema("tests/test3.schema");
+        topic:  function() { return new schema.Schema("tests/test3.schema");
         },
         'schema hash': function (topic) {
             assert.equal(topic.schemaHash(),"767ea2680d940973a8408703a4a056f27708aab7");
