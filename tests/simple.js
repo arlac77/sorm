@@ -68,6 +68,10 @@ vows.describe('Tables').addBatch({
         'find attribute by name': function (topic) {
             assert.equal (topic.attribute("a2").name, "a2");
         },
+        'attribute names array': function (topic) {
+            assert.equal (topic.attribute_names()[0], "a1");
+            assert.equal (topic.attribute_names()[1], "a2");
+        },
         'primary key': function (topic) {
             assert.equal (topic.pk()[0].name, "a1");
         },
@@ -150,7 +154,7 @@ vows.describe('Schema From File').addBatch({
         }
     }
 }).addBatch({
-    'Schema Migration': {
+    'Schema Migration Add Table': {
         topic:  function() { return new schema.Schema("tests/test3.schema");
         },
         'schema hash': function (topic) {
@@ -172,6 +176,53 @@ vows.describe('Schema From File').addBatch({
         'create database with schema' : {
             topic : function(schema) { var db = new sqlite3.Database("tests/test2.db"); schema.create(db,{},this.callback); },
             'create schema in database' : function(error,schema,db) {
+                assert.ifError(error);
+                assert.isObject(schema);
+                assert.isObject(db);
+            },
+            't1 present' : {
+                topic: function(schema) { var db = new sqlite3.Database("tests/test2.db");
+                                          db.all("SELECT name,sql FROM sqlite_master WHERE type='table' AND name=?",'t1',this.callback); },
+                't1 present': function (error,rows) {
+                    assert.ifError(error);
+                    assert.equal(rows[0].name,'t1');
+                }
+            },
+            't2 present' : {
+                topic: function(schema) { var db = new sqlite3.Database("tests/test2.db");
+                                          db.all("SELECT name,sql FROM sqlite_master WHERE type='table' AND name=?",'t2',this.callback); },
+                't1 present': function (error,rows) {
+                    assert.ifError(error);
+                    assert.equal(rows[0].name,'t2');
+                }
+            }
+        }
+    }
+}).addBatch({
+    'Schema Migration Alter Table': {
+        topic:  function() { return new schema.Schema("tests/test4.schema");
+        },
+        'schema hash': function (topic) {
+            assert.equal(topic.schemaHash(),"a966095f8456ee006bb5b2c8fd4c71676dcd57ef");
+        },
+        'schema version': function (topic) {
+            assert.equal (topic.version, 3);
+        },
+        'schema table attributes are there': function (topic) {
+            assert.equal(topic.tables[0].name,"t1");
+            assert.equal(topic.tables[1].name,"t2");
+            assert.equal(topic.tables[0].pk().length,1);
+            assert.equal(topic.tables[0].pk()[0].name,"a1");
+
+            assert.equal(topic.tables[1].pk().length,2);
+            assert.equal(topic.tables[1].pk()[0].name,"a1");
+            assert.equal(topic.tables[1].pk()[1].name,"a2");
+            assert.equal(topic.table('t2').attribute('a2').type,"char(20)");
+        },
+        'create database with schema' : {
+            topic : function(schema) { var db = new sqlite3.Database("tests/test2.db"); schema.create(db,{},this.callback); },
+            'create schema in database' : function(error,schema,db) {
+                if(error) { console.log(error); }
                 assert.ifError(error);
                 assert.isObject(schema);
                 assert.isObject(db);
