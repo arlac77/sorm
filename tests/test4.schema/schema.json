@@ -1,0 +1,19 @@
+{
+    "name" : "test1",
+    "version" : 3,
+    "tables" : [
+        {
+            "name"       : "t1",
+            "attributes" : [
+                { "name" : "a1",       "type" : "char(16)",  "constraints" : [ "primary key", "not null" ] }
+                ]
+        },
+        {
+            "name"       : "t2",
+            "attributes" : [
+                { "name" : "a1", "type" : "int", "constraints" : [ "not null" ] },
+                { "name" : "a2", "type" : "char(20)" }],
+            "constraints": [ { "name" : "primary key", "attributes": [ "a1", "a2"] } ]
+        }
+    ]
+}
