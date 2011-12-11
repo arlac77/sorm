@@ -84,6 +84,16 @@ vows.describe('Tables').addBatch({
         'sql update statement': function (topic) {
             assert.equal (topic.update_sql(['a1','a2']), "UPDATE t1 SET a2=? WHERE a1=?");
         }
+    },
+    'Table Values Advanced Primary Key': {
+        topic:  new schema.Table("t1",[new schema.Attribute("a1","int",["not null", "primary key asc"]),new schema.Attribute("a2","char(10)")]),
+
+        'primary key': function (topic) {
+            assert.equal (topic.pk()[0].name, "a1");
+        },
+        'sql create statement': function (topic) {
+            assert.equal (topic.create(), "CREATE TABLE t1(a1 int not null primary key asc,a2 char(10))");
+        }
     }
 }).export(module);
 
