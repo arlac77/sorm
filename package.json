@@ -3,7 +3,7 @@
  "description": "Simple Object Relational Mapper with Node JS",
  "version" : "0.1.5",
  "private":  true,
- "keywords": ["sqlite3","schema"],
+ "keywords": ["sqlite3", "schema", "migration"],
  "engines": { "node"  : ">=0.6" },
  "author" : { "name"  : "Markus Felten"
             , "email" : "Markus.Felten@gmx.de"
@@ -11,13 +11,16 @@
 
  "dependencies" : {
  "async"         : ">=0.1.15",
- "sqlite3"       : ">=2.1",
+ "sqlite3"       : ">=2.1"
+ },
+
+ "devDependencies" : {
  "vows"          : ">=0.5"
  },
 
  "main": "lib/schema.js",
 
- "scripts": { "test" : "node tests/simple.js" },
+ "scripts": { "test" : "node tests/*.js --isolate --spec" },
 
  "repository" : {
   "type" : "git",
