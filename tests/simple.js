@@ -248,7 +248,7 @@ vows.describe('Schema From File').addBatch({
             't2 present' : {
                 topic: function(schema) { var db = new sqlite3.Database("tests/test2.db");
                                           db.all("SELECT name,sql FROM sqlite_master WHERE type='table' AND name=?",'t2',this.callback); },
-                't1 present': function (error,rows) {
+                't2 present': function (error,rows) {
                     assert.ifError(error);
                     assert.equal(rows[0].name,'t2');
                 }
