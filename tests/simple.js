@@ -223,6 +223,7 @@ vows.describe('Schema From File').addBatch({
             assert.equal(topic.tables[1].name,"t2");
             assert.equal(topic.tables[0].pk().length,1);
             assert.equal(topic.tables[0].pk()[0].name,"a1");
+            assert.equal(topic.tables[0].pk()[0].type,"char(16)");
 
             assert.equal(topic.tables[1].pk().length,2);
             assert.equal(topic.tables[1].pk()[0].name,"a1");
