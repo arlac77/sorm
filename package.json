@@ -4,7 +4,7 @@
  "version" : "0.1.5",
  "private":  true,
  "keywords": ["sqlite3", "schema", "migration"],
- "engines": { "node"  : ">=0.6" },
+ "engines": { "node"  : ">=0.8" },
  "author" : { "name"  : "Markus Felten"
             , "email" : "Markus.Felten@gmx.de"
             },
@@ -15,7 +15,7 @@
  },
 
  "devDependencies" : {
- "vows"          : ">=0.5"
+ "vows"          : ">=0.6"
  },
 
  "main": "lib/schema.js",
