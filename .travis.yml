@@ -3,4 +3,5 @@ node_js: 0.8
 notifications:
   email:
     - markus.felten@gmx.de
+services: sqlite3
 
