@@ -1,7 +1,7 @@
 {
  "name" : "sorm",
  "description": "Simple Object Relational Mapper with Node JS",
- "version" : "0.1.5",
+ "version" : "0.2.0",
  "private":  true,
  "keywords": ["sqlite3", "schema", "migration"],
  "engines": { "node"  : ">=0.8" },
@@ -11,7 +11,8 @@
 
  "dependencies" : {
  "async"         : ">=0.1.15",
- "sqlite3"       : ">=2.1"
+ "sqlite3"       : ">=2.1",
+ "commander"	 : ">=1"
  },
 
  "devDependencies" : {
@@ -19,6 +20,10 @@
  },
 
  "main": "lib/schema.js",
+
+ "bin": {
+     "sorm": "bin/sorm"
+   }
 
  "scripts": { "test" : "node tests/*.js --isolate --spec" },
 

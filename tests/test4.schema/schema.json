@@ -1,6 +1,17 @@
 {
     "name" : "test1",
     "version" : 3,
+
+	"migrations" : {
+		"767ea2680d940973a8408703a4a056f27708aab7" : {
+			"statements" : [ 
+				"ALTER TABLE t2 RENAME TO  t2_migrate",
+				"CREATE TABLE t2(a1 int not null,a2 char(10),primary key(a1,a2))",
+				"INSERT INTO t2(a1,a2) SELECT a1,a2 FROM t2_migrate",
+				"DROP TABLE t2_migrate" ]
+		}
+		},
+
     "tables" : [
         {
             "name"       : "t1",

@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+
+"use strict";
+
+var url      = require('url')
+   ,commander= require('commander')
+   ,fs       = require('fs')
+   ,os       = require("os")
+   ,util     = require('util')
+   ,path     = require('path')
+   ,events   = require('events')
+   ,async    = require('async')
+   ,pkginfo  = require('pkginfo')(module, 'name', 'version')
+   ,sqlite3  = require('sqlite3')
+   ,schema   = require('../lib/schema.js');
+
+
+commander
+  	.version(module.exports.version)
+  	.parse(process.argv);
+
+
+var s = new schema.Schema("tests/test2re.schema");
+
+var db = new sqlite3.Database("tests/test2.db");
+
+s.reverse(db,function(error) {
+});
