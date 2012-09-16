@@ -23,7 +23,7 @@
 
  "bin": {
      "sorm": "bin/sorm"
-   }
+   },
 
  "scripts": { "test" : "node tests/*.js --isolate --spec" },
 

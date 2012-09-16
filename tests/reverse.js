@@ -15,6 +15,8 @@ vows.describe('Schema From File').addBatch({
 				assert.equal(t.name,'t1');
 				assert.equal(t.attributes[0].name,'a1');
 				assert.equal(t.attributes[0].type,'char(16)');
+				assert.equal(t.attributes[0].constraints[0].name,'PRIMARY KEY');
+				assert.equal(t.attributes[0].constraints[1].name,'NOT NULL');
             }
         }
     }
