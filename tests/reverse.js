@@ -6,12 +6,15 @@ var vows = require('vows'),
 
 vows.describe('Schema From File').addBatch({
     'Schema Values': {
-        topic:  function() { return new schema.Schema("tests/test2re.schema");
-        },
+        topic:  function() { return db = new sqlite3.Database("tests/test2.db"); },
         'reverse from database' : {
-            topic : function(schema) { var db = new sqlite3.Database("tests/test2.db"); schema.reverse(db,this.callback); },
-            'create schema in database' : function(error,schema,db) {
+            topic : function(db) { schema.tables_from_db(db,this.callback); },
+            't1 detected' : function(error,tables) {
                 assert.ifError(error);
+				var t = tables[0];
+				assert.equal(t.name,'t1');
+				assert.equal(t.attributes[0].name,'a1');
+				assert.equal(t.attributes[0].type,'char(16)');
             }
         }
     }
