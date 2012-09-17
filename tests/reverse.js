@@ -27,11 +27,10 @@ vows.describe('Schema From File').addBatch({
             't1 detected' : function(error,tables) {
                 assert.ifError(error);
 				var t = tables[0];
-				assert.equal(t.name,'t1');
-				assert.equal(t.attributes[0].name,'a1');
-				assert.equal(t.attributes[0].type,'char(16)');
-				assert.equal(t.attributes[0].constraints[0].name,'PRIMARY KEY');
-				assert.equal(t.attributes[0].constraints[1].name,'NOT NULL');
+				assert.equal(t.name,'comment_date');
+				assert.equal(t.attributes[0].name,'comment');
+				assert.equal(t.attributes[0].type,'varchar(255)');
+				assert.equal(t.attributes[0].constraints[0].name,'NOT NULL');
             }
         }
      }
