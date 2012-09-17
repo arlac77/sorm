@@ -28,9 +28,12 @@ vows.describe('Schema From File').addBatch({
                 assert.ifError(error);
 				var t = tables[0];
 				assert.equal(t.name,'comment_date');
-				assert.equal(t.attributes[0].name,'comment');
-				assert.equal(t.attributes[0].type,'varchar(255)');
+				assert.equal(t.attributes[0].name,'date');
+				assert.equal(t.attributes[0].type,'datetime');
 				assert.equal(t.attributes[0].constraints[0].name,'NOT NULL');
+				assert.equal(t.attributes[1].name,'comment');
+				assert.equal(t.attributes[1].type,'varchar(255)');
+				assert.equal(t.attributes[1].constraints[0].name,'NOT NULL');
             }
         }
      }
