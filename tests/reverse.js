@@ -28,6 +28,7 @@ vows.describe('Schema From File').addBatch({
                 assert.ifError(error);
 				var t = tables[0];
 				assert.equal(t.name,'comment_date');
+				assert.equal(t.attributes.length, 2);
 
 				assert.equal(t.attributes[0].name,'date');
 				assert.equal(t.attributes[0].type,'datetime');
@@ -41,6 +42,7 @@ vows.describe('Schema From File').addBatch({
                 assert.ifError(error);
 				var t = tables[1];
 				assert.equal(t.name,'value_date');
+				assert.equal(t.attributes.length, 3);
 
 				assert.equal(t.attributes[0].name,'date');
 				assert.equal(t.attributes[0].type,'datetime');
@@ -58,7 +60,7 @@ vows.describe('Schema From File').addBatch({
                 assert.ifError(error);
 				var t = tables[2];
 				assert.equal(t.name,'value_type');
-
+				assert.equal(t.attributes.length, 6);
 				assert.equal(t.attributes[0].name,'id');
 				assert.equal(t.attributes[0].type,'char(2)');
 				assert.equal(t.attributes[0].constraints[0].name,'NOT NULL');
