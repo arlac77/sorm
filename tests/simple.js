@@ -21,7 +21,7 @@ vows.describe('Attribute').addBatch({
         }
     },
     'Attribute Values With Constraint': {
-        topic:  new schema.Attribute("a1","int", [new schema.Constraint("not null")]),
+        topic:  new schema.Attribute("a1","int", [schema.Constraint("not null")]),
 
         'name is present': function (topic) {
             assert.equal (topic.name, "a1");
