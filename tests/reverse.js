@@ -56,6 +56,12 @@ vows.describe('Schema From File').addBatch({
 				assert.equal(t.attributes[2].type,'float');
 				assert.equal(t.attributes[2].constraints[0].name,'NOT NULL');
             },
+            'value_date constraints' : function(error,tables) {
+                assert.ifError(error);
+				var t = tables[1];
+				assert.equal(t.constraints.length, 1);
+				assert.equal(t.constraints[0].name,'"value_date_ibfk_1" FOREIGN KEY ("type") REFERENCES "value_type" ("id")');
+			},
             'value_type' : function(error,tables) {
                 assert.ifError(error);
 				var t = tables[2];
