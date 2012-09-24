@@ -99,10 +99,10 @@ vows.describe('Tables').addBatch({
 
 vows.describe('Schema').addBatch({
     'Schema Values': {
-        topic:  function() { return new schema.Schema([
+        topic:  function() { return schema.Schema({ tables : [
             schema.Table("t1",[
                 schema.Attribute("a1","int",["not null", "primary key"]),
-                schema.Attribute("a2","char(10)")])]);
+                schema.Attribute("a2","char(10)")])]});
         },
         'find table by name': function (topic) {
             assert.equal (topic.table("t1").name, "t1");

@@ -6,7 +6,7 @@ var vows = require('vows'),
 
 vows.describe('Schema From File').addBatch({
     'Schema Values': {
-        topic:  function() { return new schema.Schema("tests/test2.schema");
+        topic:  function() { return schema.Schema("tests/test2.schema");
         },
         'schema name': function (topic) {
             assert.equal (topic.name, "test1");
@@ -41,7 +41,7 @@ vows.describe('Schema From File').addBatch({
 
 vows.describe('Migration').addBatch({
     'Schema Migration Add Table': {
-        topic:  function() { return new schema.Schema("tests/test3.schema");
+        topic:  function() { return schema.Schema("tests/test3.schema");
         },
         'schema hash': function (topic) {
             assert.equal(topic.schemaHash(),"767ea2680d940973a8408703a4a056f27708aab7");
@@ -86,7 +86,7 @@ vows.describe('Migration').addBatch({
     }
 }).addBatch({
     'Schema Migration Alter Table': {
-        topic:  function() { return new schema.Schema("tests/test4.schema");
+        topic:  function() { return schema.Schema("tests/test4.schema");
         },
         'schema hash': function (topic) {
             assert.equal(topic.schemaHash(),"a966095f8456ee006bb5b2c8fd4c71676dcd57ef");
