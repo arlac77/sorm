@@ -60,7 +60,7 @@ vows.describe('Attribute').addBatch({
 
 vows.describe('Tables').addBatch({
     'Table Values': {
-        topic:  new schema.Table("t1",[schema.Attribute("a1","int",["not null", "primary key"]), schema.Attribute("a2","char(10)")]),
+        topic: schema.Table("t1",[schema.Attribute("a1","int",["not null", "primary key"]), schema.Attribute("a2","char(10)")]),
 
         'name is present': function (topic) {
             assert.equal (topic.name, "t1");
@@ -86,7 +86,7 @@ vows.describe('Tables').addBatch({
         }
     },
     'Table Values Advanced Primary Key': {
-        topic:  new schema.Table("t1",[schema.Attribute("a1","int",["not null", "primary key asc"]), schema.Attribute("a2","char(10)")]),
+        topic: schema.Table("t1",[schema.Attribute("a1","int",["not null", "primary key asc"]), schema.Attribute("a2","char(10)")]),
 
         'primary key': function (topic) {
             assert.equal (topic.pk()[0].name, "a1");
@@ -100,7 +100,7 @@ vows.describe('Tables').addBatch({
 vows.describe('Schema').addBatch({
     'Schema Values': {
         topic:  function() { return new schema.Schema([
-            new schema.Table("t1",[
+            schema.Table("t1",[
                 schema.Attribute("a1","int",["not null", "primary key"]),
                 schema.Attribute("a2","char(10)")])]);
         },
