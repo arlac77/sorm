@@ -5,7 +5,7 @@ var vows = require('vows'),
 
 vows.describe('Attribute').addBatch({
     'Attribute Values': {
-        topic:  new schema.Attribute("a1","int"),
+        topic: schema.Attribute("a1","int"),
 
         'name is present': function (topic) {
             assert.equal (topic.name, "a1");
@@ -21,7 +21,7 @@ vows.describe('Attribute').addBatch({
         }
     },
     'Attribute Values With Constraint': {
-        topic:  new schema.Attribute("a1","int", [schema.Constraint("not null")]),
+        topic: schema.Attribute("a1","int", [schema.Constraint("not null")]),
 
         'name is present': function (topic) {
             assert.equal (topic.name, "a1");
@@ -37,7 +37,7 @@ vows.describe('Attribute').addBatch({
         }
     },
     'Attribute Values Multiple Constraints': {
-        topic:  new schema.Attribute("a1","int", ["not null", "primary key"]),
+        topic: schema.Attribute("a1","int", ["not null", "primary key"]),
 
         'name is present': function (topic) {
             assert.equal (topic.name, "a1");
@@ -60,7 +60,7 @@ vows.describe('Attribute').addBatch({
 
 vows.describe('Tables').addBatch({
     'Table Values': {
-        topic:  new schema.Table("t1",[new schema.Attribute("a1","int",["not null", "primary key"]),new schema.Attribute("a2","char(10)")]),
+        topic:  new schema.Table("t1",[schema.Attribute("a1","int",["not null", "primary key"]), schema.Attribute("a2","char(10)")]),
 
         'name is present': function (topic) {
             assert.equal (topic.name, "t1");
@@ -86,7 +86,7 @@ vows.describe('Tables').addBatch({
         }
     },
     'Table Values Advanced Primary Key': {
-        topic:  new schema.Table("t1",[new schema.Attribute("a1","int",["not null", "primary key asc"]),new schema.Attribute("a2","char(10)")]),
+        topic:  new schema.Table("t1",[schema.Attribute("a1","int",["not null", "primary key asc"]), schema.Attribute("a2","char(10)")]),
 
         'primary key': function (topic) {
             assert.equal (topic.pk()[0].name, "a1");
@@ -101,8 +101,8 @@ vows.describe('Schema').addBatch({
     'Schema Values': {
         topic:  function() { return new schema.Schema([
             new schema.Table("t1",[
-                new schema.Attribute("a1","int",["not null", "primary key"]),
-                new schema.Attribute("a2","char(10)")])]);
+                schema.Attribute("a1","int",["not null", "primary key"]),
+                schema.Attribute("a2","char(10)")])]);
         },
         'find table by name': function (topic) {
             assert.equal (topic.table("t1").name, "t1");
