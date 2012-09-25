@@ -104,11 +104,11 @@ vows.describe('Schema').addBatch({
                 schema.Attribute("a1","int",["not null", "primary key"]),
                 schema.Attribute("a2","char(10)")])]});
         },
-        'find table by name': function (topic) {
-            assert.equal (topic.table("t1").name, "t1");
+        'find table by name': function (schema) {
+            assert.equal (schema.table("t1").name, "t1");
         },
-        'schema hash': function (topic) {
-            assert.equal(topic.schemaHash(),"37130897e3628af46c4bd6df9850ef8a8277bf34");
+        'schema hash': function (schema) {
+            assert.equal(schema.schemaHash(),"37130897e3628af46c4bd6df9850ef8a8277bf34");
         },
         'create database with schema' : {
             topic : function(schema) { var db = new sqlite3.Database("tests/test1.db"); schema.create(db,{},this.callback); },
