@@ -12,6 +12,7 @@
  "dependencies" : {
  "async"         : ">=0.1.15",
  "sqlite3"       : ">=2.1",
+ "pkginfo"       : ">=0.2.3",
  "commander"	 : ">=1"
  },
 

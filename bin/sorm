@@ -20,7 +20,7 @@ commander
   	.parse(process.argv);
 
 
-var s = new schema.Schema("tests/test2re.schema");
+var s = schema.Schema("tests/test2re.schema");
 
 var db = new sqlite3.Database("tests/test2.db");
 
