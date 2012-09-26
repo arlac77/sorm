@@ -35,7 +35,7 @@ vows.describe('Schema From File').addBatch({
         },
         'schema hash': function (error, schema) {
             assert.ifError(error);
-            assert.equal(schema.schemaHash(),"de6a2a2ac5d77cc905fefa140c9a5fb14d354f31");
+            assert.equal(schema.schemaHash,"de6a2a2ac5d77cc905fefa140c9a5fb14d354f31");
         },
         'create database with schema' : {
             topic : function(schema) { var db = new sqlite3.Database("tests/test2.db"); schema.create(db,{},this.callback); },
@@ -54,7 +54,7 @@ vows.describe('Migration').addBatch({
         topic:  function() { return schema.Schema("tests/test3.schema");
         },
         'schema hash': function (topic) {
-            assert.equal(topic.schemaHash(),"767ea2680d940973a8408703a4a056f27708aab7");
+            assert.equal(topic.schemaHash,"767ea2680d940973a8408703a4a056f27708aab7");
         },
         'schema version': function (topic) {
             assert.equal (topic.version, 2);
@@ -99,7 +99,7 @@ vows.describe('Migration').addBatch({
         topic:  function() { return schema.Schema("tests/test4.schema");
         },
         'schema hash': function (topic) {
-            assert.equal(topic.schemaHash(),"a966095f8456ee006bb5b2c8fd4c71676dcd57ef");
+            assert.equal(topic.schemaHash,"a966095f8456ee006bb5b2c8fd4c71676dcd57ef");
         },
         'schema version': function (topic) {
             assert.equal (topic.version, 3);

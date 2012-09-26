@@ -100,15 +100,26 @@ vows.describe('Tables').addBatch({
 vows.describe('Schema').addBatch({
     'Schema Values': {
         topic:  function() { return schema.Schema({ tables : [
-            schema.Table("t1",[
-                schema.Attribute("a1","int",["not null", "primary key"]),
-                schema.Attribute("a2","char(10)")])]});
+				{
+            	name: "t1",
+				attributes: [
+                	{ name: "a1", type: "int", constraints: ["not null", "primary key"] },
+                	{ name: "a2", type: "char(10)" }
+					]
+				}
+			]});
+        },
+        'default version': function (schema) {
+            assert.equal (schema.version, 1);
+        },
+        'default name': function (schema) {
+            assert.equal (schema.name, 'unknown');
         },
         'find table by name': function (schema) {
             assert.equal (schema.table("t1").name, "t1");
         },
         'schema hash': function (schema) {
-            assert.equal(schema.schemaHash(),"37130897e3628af46c4bd6df9850ef8a8277bf34");
+            assert.equal(schema.schemaHash,"37130897e3628af46c4bd6df9850ef8a8277bf34");
         },
         'create database with schema' : {
             topic : function(schema) { var db = new sqlite3.Database("tests/test1.db"); schema.create(db,{},this.callback); },
