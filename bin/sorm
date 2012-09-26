@@ -24,4 +24,8 @@ var db = new sqlite3.Database("tests/reverse.db");
 
 s.load_ddl_from_db(db,function(error) {
 	console.log("schema: " + JSON.stringify(s) );
+	
+	s.save(function(error) {
+		console.log("saved: " + error);
+	});
 });
