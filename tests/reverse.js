@@ -8,10 +8,13 @@ vows.describe('Schema From File').addBatch({
     'Simple db': {
         topic:  function() { return db = new sqlite3.Database("tests/test2.db"); },
         'reverse from database' : {
-            topic : function(db) { schema.tables_from_db(db,this.callback); },
-            't1 detected' : function(error,tables) {
+            topic : function(db) {
+				s = schema.Schema('/tmp/test.schema');
+				s.load_ddl_from_db(db,this.callback);
+			},
+            't1 detected' : function(error,schema) {
                 assert.ifError(error);
-				var t = tables[0];
+				var t = schema.tables['t1'];
 				assert.equal(t.name,'t1');
 				assert.equal(t.attributes[0].name,'a1');
 				assert.equal(t.attributes[0].type,'char(16)');
@@ -23,10 +26,17 @@ vows.describe('Schema From File').addBatch({
     'consumption db': {
         topic:  function() { return db = new sqlite3.Database("tests/reverse.db"); },
         'reverse from database' : {
-            topic : function(db) { schema.tables_from_db(db,this.callback); },
-            'comment_date' : function(error,tables) {
+            topic : function(db) {
+				s = schema.Schema('/tmp/test.schema');
+				s.load_ddl_from_db(db,this.callback);
+			},
+            'version' : function(error,schema) {
                 assert.ifError(error);
-				var t = tables[0];
+				assert.equal(schema.version, 1);
+			},
+            'comment_date' : function(error,schema) {
+                assert.ifError(error);
+				var t = schema.tables['comment_date'];
 				assert.equal(t.name,'comment_date');
 				assert.equal(t.attributes.length, 2);
 
@@ -38,9 +48,9 @@ vows.describe('Schema From File').addBatch({
 				assert.equal(t.attributes[1].type,'varchar(255)');
 				assert.equal(t.attributes[1].constraints[0].name,'NOT NULL');
             },
-            'value_date' : function(error,tables) {
+            'value_date' : function(error,schema) {
                 assert.ifError(error);
-				var t = tables[1];
+				var t = schema.tables['value_date'];
 				assert.equal(t.name,'value_date');
 				assert.equal(t.attributes.length, 3);
 
@@ -56,15 +66,15 @@ vows.describe('Schema From File').addBatch({
 				assert.equal(t.attributes[2].type,'float');
 				assert.equal(t.attributes[2].constraints[0].name,'NOT NULL');
             },
-            'value_date constraints' : function(error,tables) {
+            'value_date constraints' : function(error,schema) {
                 assert.ifError(error);
-				var t = tables[1];
+				var t = schema.tables['value_date'];
 				assert.equal(t.constraints.length, 1);
 				assert.equal(t.constraints[0].name,'"value_date_ibfk_1" FOREIGN KEY ("type") REFERENCES "value_type" ("id")');
 			},
-            'value_type' : function(error,tables) {
+            'value_type' : function(error,schema) {
                 assert.ifError(error);
-				var t = tables[2];
+				var t = schema.tables['value_type'];
 				assert.equal(t.name,'value_type');
 				assert.equal(t.attributes.length, 6);
 				assert.equal(t.attributes[0].name,'id');

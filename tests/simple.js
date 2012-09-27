@@ -116,7 +116,7 @@ vows.describe('Schema').addBatch({
             assert.equal (schema.name, 'unknown');
         },
         'find table by name': function (schema) {
-            assert.equal (schema.table("t1").name, "t1");
+            assert.equal (schema.tables["t1"].name, "t1");
         },
         'schema hash': function (schema) {
             assert.equal(schema.schemaHash,"37130897e3628af46c4bd6df9850ef8a8277bf34");

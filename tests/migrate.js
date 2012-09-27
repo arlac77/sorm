@@ -19,14 +19,12 @@ vows.describe('Schema From File').addBatch({
             assert.equal(schema.version, 1);
         },
         'find table by name': function (error,schema) {
-            assert.ifError(error);
-			console.log('schema: ' + JSON.stringify(schema));
-			
-            assert.equal(schema.table("t1").name, "t1");
+            assert.ifError(error);			
+            assert.equal(schema.tables["t1"].name, "t1");
         },
         'schema table attributes are there': function (error, schema) {
             assert.ifError(error);
-            var t1 = schema.table("t1");
+            var t1 = schema.tables["t1"];
             var a1 = t1.attribute("a1");
             assert.equal(a1.name, "a1");
             assert.equal(a1.type, "char(16)");
@@ -53,21 +51,22 @@ vows.describe('Migration').addBatch({
     'Schema Migration Add Table': {
         topic:  function() { return schema.Schema("tests/test3.schema");
         },
-        'schema hash': function (topic) {
-            assert.equal(topic.schemaHash,"767ea2680d940973a8408703a4a056f27708aab7");
+        'schema hash': function (schema) {
+            assert.equal(schema.schemaHash,"767ea2680d940973a8408703a4a056f27708aab7");
         },
-        'schema version': function (topic) {
-            assert.equal (topic.version, 2);
+        'schema version': function (schema) {
+            assert.equal (schema.version, 2);
         },
-        'schema table attributes are there': function (topic) {
-            assert.equal(topic.tables[0].name,"t1");
-            assert.equal(topic.tables[1].name,"t2");
-            assert.equal(topic.tables[0].pk().length,1);
-            assert.equal(topic.tables[0].pk()[0].name,"a1");
+        'schema table attributes are there': function (schema) {
+            assert.equal(schema.tables['t1'].name,"t1");
+            assert.equal(schema.tables['t2'].name,"t2");
+			
+            assert.equal(schema.tables['t1'].pk().length,1);
+            assert.equal(schema.tables['t1'].pk()[0].name,"a1");
 
-            assert.equal(topic.tables[1].pk().length,2);
-            assert.equal(topic.tables[1].pk()[0].name,"a1");
-            assert.equal(topic.tables[1].pk()[1].name,"a2");
+            assert.equal(schema.tables['t2'].pk().length,2);
+            assert.equal(schema.tables['t2'].pk()[0].name,"a1");
+            assert.equal(schema.tables['t2'].pk()[1].name,"a2");
         },
         'create database with schema' : {
             topic : function(schema) { var db = new sqlite3.Database("tests/test2.db"); schema.create(db,{},this.callback); },
@@ -98,23 +97,23 @@ vows.describe('Migration').addBatch({
     'Schema Migration Alter Table': {
         topic:  function() { return schema.Schema("tests/test4.schema");
         },
-        'schema hash': function (topic) {
-            assert.equal(topic.schemaHash,"a966095f8456ee006bb5b2c8fd4c71676dcd57ef");
+        'schema hash': function (schema) {
+            assert.equal(schema.schemaHash,"a966095f8456ee006bb5b2c8fd4c71676dcd57ef");
         },
-        'schema version': function (topic) {
-            assert.equal (topic.version, 3);
+        'schema version': function (schema) {
+            assert.equal (schema.version, 3);
         },
-        'schema table attributes are there': function (topic) {
-            assert.equal(topic.tables[0].name,"t1");
-            assert.equal(topic.tables[1].name,"t2");
-            assert.equal(topic.tables[0].pk().length,1);
-            assert.equal(topic.tables[0].pk()[0].name,"a1");
-            assert.equal(topic.tables[0].pk()[0].type,"char(16)");
+        'schema table attributes are there': function (schema) {
+            assert.equal(schema.tables['t1'].name,"t1");
+            assert.equal(schema.tables['t1'].name,"t2");
+            assert.equal(schema.tables['t1'].pk().length,1);
+            assert.equal(schema.tables['t1'].pk()[0].name,"a1");
+            assert.equal(schema.tables['t1'].pk()[0].type,"char(16)");
 
-            assert.equal(topic.tables[1].pk().length,2);
-            assert.equal(topic.tables[1].pk()[0].name,"a1");
-            assert.equal(topic.tables[1].pk()[1].name,"a2");
-            assert.equal(topic.table('t2').attribute('a2').type,"char(20)");
+            assert.equal(schema.tables['t2'].pk().length,2);
+            assert.equal(schema.tables['t2'].pk()[0].name,"a1");
+            assert.equal(schema.tables['t2'].pk()[1].name,"a2");
+            assert.equal(schema.tables['t2'].attribute('a2').type,"char(20)");
         },
         'create database with schema' : {
             topic : function(schema) { var db = new sqlite3.Database("tests/test2.db"); schema.create(db,{},this.callback); },
