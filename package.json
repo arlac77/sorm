@@ -27,7 +27,7 @@
      "sorm": "bin/sorm"
    },
 
- "scripts": { "test" : "node tests/*.js --isolate --spec" },
+ "scripts": { "test" : "vows tests/*.js --isolate --spec" },
 
  "repository" : {
   "type" : "git",
