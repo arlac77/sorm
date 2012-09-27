@@ -15,12 +15,13 @@ var commander= require('commander')
 
 commander
   	.version(module.exports.version)
+	.option('--database <file>', 'sqlite3 database file')
+	.option('--schema <file>', 'schema definition file')
   	.parse(process.argv);
 
 
-var s = schema.Schema("tests/test2re.schema");
-
-var db = new sqlite3.Database("tests/reverse.db");
+var s  = schema.Schema(commander.schema);
+var db = new sqlite3.Database(commander.database);
 
 s.load_ddl_from_db(db,function(error) {
 	
@@ -28,6 +29,6 @@ s.load_ddl_from_db(db,function(error) {
 		if(error)
 			console.log("save error: " + error);
 		else
-			console.log("saved: " + s.basename);
+			console.log("saved: " + s.basedir);
 	});
 });
