@@ -7,8 +7,7 @@ var vows = require('vows'),
 vows.describe('Schema From File').addBatch({
     'Schema Values': {
         topic: function() {
-			var s = schema.Schema("tests/test2.schema");
-			s.load(this.callback);
+			schema.Schema("tests/test2.schema",this.callback);
         },
         'schema name': function (error, schema) {
             assert.ifError(error);
@@ -46,18 +45,24 @@ vows.describe('Schema From File').addBatch({
     }
 }).export(module);
 
-/*
+
 vows.describe('Migration').addBatch({
-    'Schema Migration Add Table': {
-        topic:  function() { return schema.Schema("tests/test3.schema");
+    'Add Table': {
+        topic: function() {
+			schema.Schema("tests/test3.schema",this.callback);
         },
-        'schema hash': function (schema) {
+        'hash': function(error,schema) {
+			assert.ifError(error);
             assert.equal(schema.schemaHash,"767ea2680d940973a8408703a4a056f27708aab7");
         },
-        'schema version': function (schema) {
-            assert.equal (schema.version, 2);
+        'version': function(error,schema) {
+			assert.ifError(error);
+
+            assert.equal(schema.version, 2);
         },
-        'schema table attributes are there': function (schema) {
+        'table attributes': function(error,schema) {
+			assert.ifError(error);
+
             assert.equal(schema.tables['t1'].name,"t1");
             assert.equal(schema.tables['t2'].name,"t2");
 			
@@ -69,14 +74,17 @@ vows.describe('Migration').addBatch({
             assert.equal(schema.tables['t2'].pk()[1].name,"a2");
         },
         'create database with schema' : {
-            topic : function(schema) { var db = new sqlite3.Database("tests/test2.db"); schema.create(db,{},this.callback); },
+            topic : function(schema) {
+				//console.log("schema: " + JSON.stringify(error,undefined,'\t'));
+				var db = new sqlite3.Database("tests/test2.db");
+				schema.create(db,{},this.callback); },
             'create schema in database' : function(error,schema,db) {
                 assert.ifError(error);
                 assert.isObject(schema);
                 assert.isObject(db);
             },
             't1 present' : {
-                topic: function(schema) { var db = new sqlite3.Database("tests/test2.db");
+                topic: function(error,schema) { var db = new sqlite3.Database("tests/test2.db");
                                           db.all("SELECT name,sql FROM sqlite_master WHERE type='table' AND name=?",'t1',this.callback); },
                 't1 present': function (error,rows) {
                     assert.ifError(error);
@@ -93,17 +101,21 @@ vows.describe('Migration').addBatch({
             }
         }
     }
-}).addBatch({
+})
+/*
+.addBatch({
     'Schema Migration Alter Table': {
-        topic:  function() { return schema.Schema("tests/test4.schema");
+        topic: function() {
+			var schema = schema.Schema("tests/test4.schema");
+			schema.load(this.callback);
         },
-        'schema hash': function (schema) {
+        'schema hash': function (error,schema) {
             assert.equal(schema.schemaHash,"a966095f8456ee006bb5b2c8fd4c71676dcd57ef");
         },
-        'schema version': function (schema) {
+        'schema version': function (error,schema) {
             assert.equal (schema.version, 3);
         },
-        'schema table attributes are there': function (schema) {
+        'schema table attributes are there': function (error,schema) {
             assert.equal(schema.tables['t1'].name,"t1");
             assert.equal(schema.tables['t1'].name,"t2");
             assert.equal(schema.tables['t1'].pk().length,1);
@@ -114,7 +126,8 @@ vows.describe('Migration').addBatch({
             assert.equal(schema.tables['t2'].pk()[0].name,"a1");
             assert.equal(schema.tables['t2'].pk()[1].name,"a2");
             assert.equal(schema.tables['t2'].attribute('a2').type,"char(20)");
-        },
+        }
+		,
         'create database with schema' : {
             topic : function(schema) { var db = new sqlite3.Database("tests/test2.db"); schema.create(db,{},this.callback); },
             'create schema in database' : function(error,schema,db) {
@@ -141,5 +154,4 @@ vows.describe('Migration').addBatch({
             }
         }
     }
-}).export(module);
-*/
+})*/ .export(module);

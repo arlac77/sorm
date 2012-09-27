@@ -1,12 +1,11 @@
 {
     "name" : "test1",
     "version" : 1,
-    "tables" : [
-        {
-            "name"       : "t1",
+    "tables" : {
+       "t1" : {
             "attributes" : [
                 { "name" : "a1",       "type" : "char(16)",  "constraints" : [ "primary key", "not null" ] }
                 ]
         }
-    ]
+    }
 }

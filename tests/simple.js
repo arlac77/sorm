@@ -99,15 +99,14 @@ vows.describe('Tables').addBatch({
 
 vows.describe('Schema').addBatch({
     'Schema Values': {
-        topic:  function() { return schema.Schema({ tables : [
-				{
-            	name: "t1",
+        topic:  function() { return schema.Schema({ tables : {
+				"t1" : {
 				attributes: [
                 	{ name: "a1", type: "int", constraints: ["not null", "primary key"] },
                 	{ name: "a2", type: "char(10)" }
 					]
 				}
-			]});
+			}});
         },
         'default version': function (schema) {
             assert.equal (schema.version, 1);
