@@ -9,11 +9,11 @@ vows.describe('Schema From File').addBatch({
         topic: function() {
 			schema.Schema("tests/test2.schema",this.callback);
         },
-        'schema name': function (error, schema) {
+        'name': function (error, schema) {
             assert.ifError(error);
             assert.equal(schema.name, "test1");
         },
-        'schema version': function (error, schema) {
+        'version': function (error, schema) {
             assert.ifError(error);
             assert.equal(schema.version, 1);
         },
@@ -21,7 +21,7 @@ vows.describe('Schema From File').addBatch({
             assert.ifError(error);			
             assert.equal(schema.tables["t1"].name, "t1");
         },
-        'schema table attributes are there': function (error, schema) {
+        'table attributes are there': function (error, schema) {
             assert.ifError(error);
             var t1 = schema.tables["t1"];
             var a1 = t1.attribute("a1");
@@ -30,11 +30,11 @@ vows.describe('Schema From File').addBatch({
             assert.equal(a1.constraints[0].name, "PRIMARY KEY");
             assert.equal(a1.constraints[1].name, "NOT NULL");
         },
-        'schema hash': function (error, schema) {
+        'hash': function (error, schema) {
             assert.ifError(error);
-            assert.equal(schema.schemaHash,"de6a2a2ac5d77cc905fefa140c9a5fb14d354f31");
+            assert.equal(schema.schemaHash,"58cdd2d9a51f98a088c64eed8aea07df0f39d9d7");
         },
-        'create database with schema' : {
+        'create database' : {
             topic : function(schema) { var db = new sqlite3.Database("tests/test2.db"); schema.exec_ddl(db,{},this.callback); },
             'create schema in database' : function(error,schema,db) {
                 assert.ifError(error);
