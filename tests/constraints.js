@@ -46,6 +46,12 @@ vows.describe('Constraint').addBatch({
             assert.equal(topic.ddl_statement(), "DEFAULT 'A'");
         }
 	},
+	"default null": {
+        topic: schema.Constraint("default null"),
+        'ddl_statement': function (topic) {
+            assert.equal(topic.ddl_statement(), "DEFAULT NULL");
+        }
+	},
 	"'value_date_ibfk_1' FOREIGN KEY ('type') REFERENCES 'value_type' ('id')" : {
         topic: schema.Constraint("CONSTRAINT 'value_date_ibfk_1' FOREIGN KEY ('type') REFERENCES 'value_type' ('id')"),
         'ddl_statement': function (topic) {
