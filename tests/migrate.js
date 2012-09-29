@@ -27,8 +27,8 @@ vows.describe('Schema From File').addBatch({
             var a1 = t1.attribute("a1");
             assert.equal(a1.name, "a1");
             assert.equal(a1.type, "char(16)");
-            assert.equal(a1.constraints[0].name, "primary key");
-            assert.equal(a1.constraints[1].name, "not null");
+            assert.equal(a1.constraints[0].name, "PRIMARY KEY");
+            assert.equal(a1.constraints[1].name, "NOT NULL");
         },
         'schema hash': function (error, schema) {
             assert.ifError(error);
