@@ -17,11 +17,11 @@ vows.describe('Attribute').addBatch({
             assert.equal (topic.constraints.length, 0);
         },
         'sql statement': function (topic) {
-            assert.equal (topic.create(), "a1 int");
+            assert.equal (topic.ddl_statement(), "a1 int");
         }
     },
     'Attribute Values With Constraint': {
-        topic: schema.Attribute("a1","int", [schema.Constraint("not null")]),
+        topic: schema.Attribute("a1","int", [schema.Constraint("NOT NULL")]),
 
         'name is present': function (topic) {
             assert.equal (topic.name, "a1");
@@ -30,10 +30,10 @@ vows.describe('Attribute').addBatch({
             assert.equal (topic.type, "int");
         },
         'constraint is present': function (topic) {
-            assert.equal (topic.constraints[0].name, "not null");
+            assert.equal (topic.constraints[0].name, "NOT NULL");
         },
         'sql statement': function (topic) {
-            assert.equal (topic.create(), "a1 int not null");
+            assert.equal (topic.ddl_statement(), "a1 int NOT NULL");
         }
     },
     'Attribute Values Multiple Constraints': {
@@ -46,13 +46,13 @@ vows.describe('Attribute').addBatch({
             assert.equal (topic.type, "int");
         },
         '1. constraint is present': function (topic) {
-            assert.equal (topic.constraints[0].name, "not null");
+            assert.equal (topic.constraints[0].name, "NOT NULL");
         },
         '2. constraint is present': function (topic) {
-            assert.equal (topic.constraints[1].name, "primary key");
+            assert.equal (topic.constraints[1].name, "PRIMARY KEY");
         },
         'sql statement': function (topic) {
-            assert.equal (topic.create(), "a1 int not null primary key");
+            assert.equal (topic.ddl_statement(), "a1 int NOT NULL PRIMARY KEY");
         }
     }
 }).export(module);
@@ -76,7 +76,7 @@ vows.describe('Tables').addBatch({
             assert.equal (topic.pk()[0].name, "a1");
         },
         'sql create statement': function (topic) {
-            assert.equal (topic.create(), "CREATE TABLE t1(a1 int not null primary key,a2 char(10))");
+            assert.equal (topic.ddl_statement(), "CREATE TABLE t1(a1 int NOT NULL PRIMARY KEY,a2 char(10))");
         },
         'sql insert statement': function (topic) {
             assert.equal (topic.insert_sql(['a1','a2']), "INSERT INTO t1(a1,a2) VALUES(?,?)");
@@ -92,7 +92,7 @@ vows.describe('Tables').addBatch({
             assert.equal (topic.pk()[0].name, "a1");
         },
         'sql create statement': function (topic) {
-            assert.equal (topic.create(), "CREATE TABLE t1(a1 int not null primary key asc,a2 char(10))");
+            assert.equal (topic.ddl_statement(), "CREATE TABLE t1(a1 int NOT NULL PRIMARY KEY ASC,a2 char(10))");
         }
     }
 }).export(module);
@@ -121,7 +121,7 @@ vows.describe('Schema').addBatch({
             assert.equal(schema.schemaHash,"37130897e3628af46c4bd6df9850ef8a8277bf34");
         },
         'create database with schema' : {
-            topic : function(schema) { var db = new sqlite3.Database("tests/test1.db"); schema.create(db,{},this.callback); },
+            topic : function(schema) { var db = new sqlite3.Database("tests/test1.db"); schema.exec_ddl(db,{},this.callback); },
             'create schema in database' : function(error,schema,db) {
                 assert.ifError(error);
                 assert.isObject(schema);
@@ -139,5 +139,3 @@ vows.describe('Schema').addBatch({
         }
     }
 }).export(module);
-
-

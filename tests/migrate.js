@@ -35,7 +35,7 @@ vows.describe('Schema From File').addBatch({
             assert.equal(schema.schemaHash,"de6a2a2ac5d77cc905fefa140c9a5fb14d354f31");
         },
         'create database with schema' : {
-            topic : function(schema) { var db = new sqlite3.Database("tests/test2.db"); schema.create(db,{},this.callback); },
+            topic : function(schema) { var db = new sqlite3.Database("tests/test2.db"); schema.exec_ddl(db,{},this.callback); },
             'create schema in database' : function(error,schema,db) {
                 assert.ifError(error);
                 assert.isObject(schema);
@@ -77,7 +77,7 @@ vows.describe('Migration').addBatch({
             topic : function(schema) {
 				//console.log("schema: " + JSON.stringify(error,undefined,'\t'));
 				var db = new sqlite3.Database("tests/test2.db");
-				schema.create(db,{},this.callback); },
+				schema.exec_ddl(db,{},this.callback); },
             'create schema in database' : function(error,schema,db) {
                 assert.ifError(error);
                 assert.isObject(schema);
@@ -129,7 +129,7 @@ vows.describe('Migration').addBatch({
         }
 		,
         'create database with schema' : {
-            topic : function(schema) { var db = new sqlite3.Database("tests/test2.db"); schema.create(db,{},this.callback); },
+            topic : function(schema) { var db = new sqlite3.Database("tests/test2.db"); schema.exec_ddl(db,{},this.callback); },
             'create schema in database' : function(error,schema,db) {
                 if(error) { console.log(error); }
                 assert.ifError(error);
