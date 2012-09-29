@@ -116,9 +116,10 @@ vows.describe('Schema').addBatch({
         },
         'find table by name': function (schema) {
             assert.equal (schema.tables["t1"].name, "t1");
+            assert.equal (schema.tables["t1"].attributes.length, 2);
         },
         'schema hash': function (schema) {
-            assert.equal(schema.schemaHash,"37130897e3628af46c4bd6df9850ef8a8277bf34");
+            assert.equal(schema.schemaHash,"35f7925e0ff70acf332a4f0d35687f3d0d17e584");
         },
         'create database with schema' : {
             topic : function(schema) { var db = new sqlite3.Database("tests/test1.db"); schema.exec_ddl(db,{},this.callback); },
