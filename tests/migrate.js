@@ -3,7 +3,6 @@ var vows = require('vows'),
     sqlite3 = require('sqlite3'),
     schema  = require('../lib/schema');
 
-
 vows.describe('Schema From File').addBatch({
     'Schema Values': {
         topic: function() {
@@ -11,7 +10,7 @@ vows.describe('Schema From File').addBatch({
         },
         'name': function (error, schema) {
             assert.ifError(error);
-            assert.equal(schema.name, "test1");
+            assert.equal(schema.name, "test2");
         },
         'version': function (error, schema) {
             assert.ifError(error);
