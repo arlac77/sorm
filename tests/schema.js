@@ -12,11 +12,11 @@ vows.describe('Schema').addBatch({
     'Schema Values': {
         topic:  function() { return schema.Schema({ tables : {
 				"t1" : {
-					attributes: [
+					"attributes": [
                 		{ name: "a1", type: "int", constraints: ["not null", "primary key"] },
                 		{ name: "a2", type: "char(10)" }
-					]/*,
-		            "constraints": [ { "name" : "primary key", "attributes": [ "a1", "a2"] } ]*/
+					],
+		            "constraints": [ { "name" : "primary key", "attributes": [ "a1", "a2"] } ]
 				}
 			}});
         },
