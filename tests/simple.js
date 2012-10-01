@@ -18,6 +18,9 @@ vows.describe('Attribute').addBatch({
         },
         'sql statement': function (topic) {
             assert.equal (topic.ddl_statement(), "a1 int");
+        },
+        'JSON': function (topic) {
+            assert.equal (JSON.stringify(topic), '{"name":"a1","type":"int"}');
         }
     },
     'Attribute Values With Constraint': {
@@ -34,6 +37,9 @@ vows.describe('Attribute').addBatch({
         },
         'sql statement': function (topic) {
             assert.equal (topic.ddl_statement(), "a1 int NOT NULL");
+        },
+        'JSON': function (topic) {
+            assert.equal (JSON.stringify(topic), '{"name":"a1","type":"int","constraints":[{"name":"NOT NULL"}]}');
         }
     },
     'Attribute Values Multiple Constraints': {
@@ -53,6 +59,9 @@ vows.describe('Attribute').addBatch({
         },
         'sql statement': function (topic) {
             assert.equal (topic.ddl_statement(), "a1 int NOT NULL PRIMARY KEY");
+        },
+        'JSON': function (topic) {
+            assert.equal (JSON.stringify(topic), '{"name":"a1","type":"int","constraints":[{"name":"NOT NULL"},{"name":"PRIMARY KEY"}]}');
         }
     }
 }).export(module);
