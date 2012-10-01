@@ -1,16 +1,22 @@
-var vows = require('vows'),
-    assert = require('assert'),
+var vows    = require('vows'),
+    assert  = require('assert'),
+	mkdirp  = require('mkdirp'),
+	path    = require('path'),
     sqlite3 = require('sqlite3'),
     schema  = require('../lib/schema');
+
+var testdir = path.join("/tmp","vows" + process.pid);
+mkdirp.sync(testdir,'0755');
 
 vows.describe('Schema').addBatch({
     'Schema Values': {
         topic:  function() { return schema.Schema({ tables : {
 				"t1" : {
-				attributes: [
-                	{ name: "a1", type: "int", constraints: ["not null", "primary key"] },
-                	{ name: "a2", type: "char(10)" }
-					]
+					attributes: [
+                		{ name: "a1", type: "int", constraints: ["not null", "primary key"] },
+                		{ name: "a2", type: "char(10)" }
+					]/*,
+		            "constraints": [ { "name" : "primary key", "attributes": [ "a1", "a2"] } ]*/
 				}
 			}});
         },
@@ -28,7 +34,7 @@ vows.describe('Schema').addBatch({
             assert.equal(schema.schemaHash,"35f7925e0ff70acf332a4f0d35687f3d0d17e584");
         },
         'create database with schema' : {
-            topic : function(schema) { var db = new sqlite3.Database("tests/test1.db"); schema.exec_ddl(db,{},this.callback); },
+            topic : function(schema) { var db = new sqlite3.Database(path.join(testdir,"test1.db")); schema.exec_ddl(db,{},this.callback); },
             'create schema in database' : function(error,schema,db) {
                 assert.ifError(error);
                 assert.isObject(schema);
