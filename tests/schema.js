@@ -15,8 +15,7 @@ vows.describe('Schema').addBatch({
 					"attributes": [
                 		{ name: "a1", type: "int", constraints: ["not null", "primary key"] },
                 		{ name: "a2", type: "char(10)" }
-					],
-		            "constraints": [ { "name" : "primary key", "attributes": [ "a1", "a2"] } ]
+					]
 				}
 			}});
         },

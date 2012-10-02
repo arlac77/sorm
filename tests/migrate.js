@@ -52,14 +52,14 @@ vows.describe('Migration').addBatch({
         },
         'hash': function(error,schema) {
 			assert.ifError(error);
-            assert.equal(schema.schemaHash,"767ea2680d940973a8408703a4a056f27708aab7");
+            assert.equal(schema.schemaHash,"9ed7f9233d707b207e32f9f54fd2634daa45633e");
         },
         'version': function(error,schema) {
 			assert.ifError(error);
 
             assert.equal(schema.version, 2);
         },
-        'table attributes': function(error,schema) {
+        'table attributes t1': function(error,schema) {
 			assert.ifError(error);
 
             assert.equal(schema.tables['t1'].name,"t1");
@@ -67,11 +67,15 @@ vows.describe('Migration').addBatch({
 			
             assert.equal(schema.tables['t1'].pk().length,1);
             assert.equal(schema.tables['t1'].pk()[0].name,"a1");
-
+        },
+        'table attributes t2': function(error,schema) {
+			assert.ifError(error);
+			console.log(schema.tables['t2']);
             assert.equal(schema.tables['t2'].pk().length,2);
             assert.equal(schema.tables['t2'].pk()[0].name,"a1");
             assert.equal(schema.tables['t2'].pk()[1].name,"a2");
         },
+
         'create database with schema' : {
             topic : function(schema) {
 				//console.log("schema: " + JSON.stringify(error,undefined,'\t'));
