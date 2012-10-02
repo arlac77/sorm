@@ -4,6 +4,16 @@ var vows = require('vows'),
     schema  = require('../lib/schema');
 
 vows.describe('Constraint').addBatch({
+	'{name : not null}': {
+        topic: schema.Constraint({name: "not null"}),
+        'ddl_statement': function (topic) {
+            assert.equal(topic.ddl_statement(), "NOT NULL");
+        },
+        'name': function (topic) {
+            assert.equal(topic.name, "NOT NULL");
+        }
+	},
+
 	'not null': {
         topic: schema.Constraint("not null"),
         'ddl_statement': function (topic) {
@@ -11,6 +21,9 @@ vows.describe('Constraint').addBatch({
         },
         'toString': function (topic) {
             assert.equal(topic.toString(), "NOT NULL");
+        },
+        'name': function (topic) {
+            assert.equal(topic.name, "NOT NULL");
         }
 	},
 	'null': {
@@ -20,6 +33,9 @@ vows.describe('Constraint').addBatch({
         },
         'toString': function (topic) {
             assert.equal(topic.toString(), "NULL");
+        },
+        'name': function (topic) {
+            assert.equal(topic.name, "NULL");
         }
 	},
 	'NULL': {
@@ -29,6 +45,9 @@ vows.describe('Constraint').addBatch({
         },
         'toString': function (topic) {
             assert.equal(topic.toString(), "NULL");
+        },
+        'name': function (topic) {
+            assert.equal(topic.name, "NULL");
         }
 	},
 	'primary key': {
@@ -47,8 +66,24 @@ vows.describe('Constraint').addBatch({
         },
         'toString': function (topic) {
             assert.equal(topic.toString(), "PRIMARY KEY ASC");
+        },
+        'name': function (topic) {
+            assert.equal(topic.name, "PRIMARY KEY");
         }
 	},
+	'{name:primary key options:asc}': {
+        topic: schema.Constraint({name : "primary key", options : "asc" }),
+        'ddl_statement': function (topic) {
+            assert.equal(topic.ddl_statement(), "PRIMARY KEY ASC");
+        },
+        'toString': function (topic) {
+            assert.equal(topic.toString(), "PRIMARY KEY ASC");
+        },
+        'name': function (topic) {
+            assert.equal(topic.name, "PRIMARY KEY");
+        }
+	},
+
 	'default 0': {
         topic: schema.Constraint("default 0"),
         'ddl_statement': function (topic) {
@@ -56,6 +91,9 @@ vows.describe('Constraint').addBatch({
         },
         'toString': function (topic) {
             assert.equal(topic.toString(), "DEFAULT 0");
+        },
+        'name': function (topic) {
+            assert.equal(topic.name, "DEFAULT");
         }
 	},
 	"default 'A'": {
@@ -65,6 +103,9 @@ vows.describe('Constraint').addBatch({
         },
         'toString': function (topic) {
             assert.equal(topic.toString(), "DEFAULT 'A'");
+        },
+        'name': function (topic) {
+            assert.equal(topic.name, "DEFAULT");
         }
 	},
 	"default \"A\"": {

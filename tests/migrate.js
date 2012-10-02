@@ -52,7 +52,7 @@ vows.describe('Migration').addBatch({
         },
         'hash': function(error,schema) {
 			assert.ifError(error);
-            assert.equal(schema.schemaHash,"9ed7f9233d707b207e32f9f54fd2634daa45633e");
+            assert.equal(schema.schemaHash,"096ae9930fe38aa0b900004ebba308cfdef2df47");
         },
         'version': function(error,schema) {
 			assert.ifError(error);
