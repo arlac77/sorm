@@ -70,7 +70,7 @@ vows.describe('Schema From File').addBatch({
                 assert.ifError(error);
 				var t = schema.tables['value_date'];
 				assert.equal(t.constraints.length, 1);
-				assert.equal(t.constraints[0].ddl_statement(),"CONSTRAINT \'value_date_ibfk_1\' FOREIGN KEY (\"type\") REFERENCES \"value_type\" (\"id\")");
+				assert.equal(t.constraints[0].ddl_statement(),"CONSTRAINT \"value_date_ibfk_1\" FOREIGN KEY (\"type\") REFERENCES \"value_type\" (\"id\")");
 			},
             'value_type' : function(error,schema) {
                 assert.ifError(error);

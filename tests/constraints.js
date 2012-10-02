@@ -11,6 +11,9 @@ vows.describe('Constraint').addBatch({
         },
         'name': function (topic) {
             assert.equal(topic.name, "NOT NULL");
+        },
+        'JSON': function (topic) {
+            assert.equal (JSON.stringify(topic), '{"name":"NOT NULL"}');
         }
 	},
 
@@ -24,6 +27,9 @@ vows.describe('Constraint').addBatch({
         },
         'name': function (topic) {
             assert.equal(topic.name, "NOT NULL");
+        },
+        'JSON': function (topic) {
+            assert.equal (JSON.stringify(topic), '{"name":"NOT NULL"}');
         }
 	},
 	'null': {
@@ -48,6 +54,9 @@ vows.describe('Constraint').addBatch({
         },
         'name': function (topic) {
             assert.equal(topic.name, "NULL");
+        },
+        'JSON': function (topic) {
+            assert.equal (JSON.stringify(topic), '{"name":"NULL"}');
         }
 	},
 	'primary key': {
@@ -69,6 +78,9 @@ vows.describe('Constraint').addBatch({
         },
         'name': function (topic) {
             assert.equal(topic.name, "PRIMARY KEY");
+        },
+        'JSON': function (topic) {
+            assert.equal (JSON.stringify(topic), '{"name":"PRIMARY KEY","options":"ASC"}');
         }
 	},
 	'{name:primary key options:asc}': {
@@ -81,6 +93,9 @@ vows.describe('Constraint').addBatch({
         },
         'name': function (topic) {
             assert.equal(topic.name, "PRIMARY KEY");
+        },
+        'JSON': function (topic) {
+            assert.equal (JSON.stringify(topic), '{"name":"PRIMARY KEY","options":"ASC"}');
         }
 	},
 
@@ -94,18 +109,24 @@ vows.describe('Constraint').addBatch({
         },
         'name': function (topic) {
             assert.equal(topic.name, "DEFAULT");
+        },
+        'JSON': function (topic) {
+            assert.equal (JSON.stringify(topic), '{"name":"DEFAULT","value":0}');
         }
 	},
 	"default 'A'": {
         topic: schema.Constraint("default 'A'"),
         'ddl_statement': function (topic) {
-            assert.equal(topic.ddl_statement(), "DEFAULT 'A'");
+            assert.equal(topic.ddl_statement(), "DEFAULT \"A\"");
         },
         'toString': function (topic) {
-            assert.equal(topic.toString(), "DEFAULT 'A'");
+            assert.equal(topic.toString(), "DEFAULT \"A\"");
         },
         'name': function (topic) {
             assert.equal(topic.name, "DEFAULT");
+        },
+        'JSON': function (topic) {
+            assert.equal (JSON.stringify(topic), '{"name":"DEFAULT","value":"A"}');
         }
 	},
 	"default \"A\"": {
@@ -121,18 +142,21 @@ vows.describe('Constraint').addBatch({
         },
         'toString': function (topic) {
             assert.equal(topic.toString(), "DEFAULT NULL");
+        },
+        'JSON': function (topic) {
+            assert.equal (JSON.stringify(topic), '{"name":"DEFAULT"}');
         }
 	},
 	"'value_date_ibfk_1' FOREIGN KEY ('type') REFERENCES 'value_type' ('id')" : {
         topic: schema.Constraint("CONSTRAINT 'value_date_ibfk_1' FOREIGN KEY ('type') REFERENCES 'value_type' ('id')"),
         'ddl_statement': function (topic) {
-            assert.equal( topic.ddl_statement(), "CONSTRAINT 'value_date_ibfk_1' FOREIGN KEY ('type') REFERENCES 'value_type' ('id')");
+            assert.equal( topic.ddl_statement(), "CONSTRAINT \"value_date_ibfk_1\" FOREIGN KEY ('type') REFERENCES 'value_type' ('id')");
         }
 	},
 	"with trailing space: 'value_date_ibfk_1' FOREIGN KEY ('type') REFERENCES 'value_type' ('id')" : {
         topic: schema.Constraint("CONSTRAINT 'value_date_ibfk_1' FOREIGN KEY ('type') REFERENCES 'value_type' ('id')  "),
         'ddl_statement': function (topic) {
-            assert.equal( topic.ddl_statement(), "CONSTRAINT 'value_date_ibfk_1' FOREIGN KEY ('type') REFERENCES 'value_type' ('id')");
+            assert.equal( topic.ddl_statement(), "CONSTRAINT \"value_date_ibfk_1\" FOREIGN KEY ('type') REFERENCES 'value_type' ('id')");
         }
 	}
 }).export(module);
