@@ -1,36 +1,39 @@
 {
- "name" : "sorm",
- "description": "Simple Object Relational Mapper with Node JS",
- "version" : "0.2.0",
- "private":  false,
- "keywords": ["sqlite3", "schema", "migration"],
- "engines": { "node"  : ">=0.8" },
- "author" : { "name"  : "Markus Felten"
-            , "email" : "Markus.Felten@gmx.de"
-            },
-
- "dependencies" : {
- "async"         : ">=0.1.15",
- "sqlite3"       : ">=2.1",
- "pkginfo"       : ">=0.2.3",
- "mkdirp"        : ">=0.3.1",
- "commander"	 : ">=1"
- },
-
- "devDependencies" : {
- "vows"          : ">=0.6"
- },
-
- "main": "lib/schema.js",
-
- "bin": {
-     "sorm": "bin/sorm"
-   },
-
- "scripts": { "test" : "vows tests/*.js --isolate --spec" },
-
- "repository" : {
-  "type" : "git",
-  "url"  : "git@github.com:arlac77/sorm.git"
+  "name": "sorm",
+  "description": "Simple Object Relational Mapper with Node JS",
+  "version": "0.2.1",
+  "private": false,
+  "keywords": [
+    "sqlite3",
+    "schema",
+    "migration"
+  ],
+  "engines": {
+    "node": ">=0.8"
+  },
+  "author": {
+    "name": "Markus Felten",
+    "email": "Markus.Felten@gmx.de"
+  },
+  "dependencies": {
+    "async": ">=0.1.15",
+    "sqlite3": ">=2.1",
+    "pkginfo": ">=0.2.3",
+    "mkdirp": ">=0.3.1",
+    "commander": ">=1"
+  },
+  "devDependencies": {
+    "vows": ">=0.6"
+  },
+  "main": "lib/schema.js",
+  "bin": {
+    "sorm": "bin/sorm"
+  },
+  "scripts": {
+    "test": "vows tests/*.js --isolate --spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:arlac77/sorm.git"
   }
 }
