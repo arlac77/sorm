@@ -52,7 +52,7 @@ vows.describe('Migration').addBatch({
         },
         'hash': function(error,schema) {
 			assert.ifError(error);
-            assert.equal(schema.schemaHash,"096ae9930fe38aa0b900004ebba308cfdef2df47");
+            assert.equal(schema.schemaHash,"d77ae3c5aaec8a94833e7322de5e3efd151b9fa6");
         },
         'version': function(error,schema) {
 			assert.ifError(error);
@@ -70,7 +70,7 @@ vows.describe('Migration').addBatch({
         },
         'table attributes t2': function(error,schema) {
 			assert.ifError(error);
-			console.log(schema.tables['t2']);
+			//console.log(schema.tables['t2']);
             assert.equal(schema.tables['t2'].pk().length,2);
             assert.equal(schema.tables['t2'].pk()[0].name,"a1");
             assert.equal(schema.tables['t2'].pk()[1].name,"a2");

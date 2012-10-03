@@ -71,6 +71,30 @@ vows.describe('Constraint').addBatch({
             assert.equal (JSON.stringify(topic), '{"name":"PRIMARY KEY"}');
         }
 	},
+	'primary key with attributes': {
+        topic: schema.Constraint("primary key(a1,a2)"),
+        'ddl_statement': function (topic) {
+            assert.equal(topic.ddl_statement(), "PRIMARY KEY(a1,a2)");
+        },
+        'toString': function (topic) {
+            assert.equal(topic.toString(), "PRIMARY KEY(a1,a2)");
+        },
+        'JSON': function (topic) {
+            assert.equal (JSON.stringify(topic), '{"name":"PRIMARY KEY","attributes":["a1","a2"]}');
+        }
+	},
+	'primary key with attributes from JSON': {
+        topic: schema.Constraint({ name: "primary key", attributes: ["a1","a2"]}),
+        'ddl_statement': function (topic) {
+            assert.equal(topic.ddl_statement(), "PRIMARY KEY(a1,a2)");
+        },
+        'toString': function (topic) {
+            assert.equal(topic.toString(), "PRIMARY KEY(a1,a2)");
+        },
+        'JSON': function (topic) {
+            assert.equal (JSON.stringify(topic), '{"name":"PRIMARY KEY","attributes":["a1","a2"]}');
+        }
+	},
 	'primary key asc': {
         topic: schema.Constraint("primary key asc"),
         'ddl_statement': function (topic) {
