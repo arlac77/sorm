@@ -66,6 +66,9 @@ vows.describe('Constraint').addBatch({
         },
         'toString': function (topic) {
             assert.equal(topic.toString(), "PRIMARY KEY");
+        },
+        'JSON': function (topic) {
+            assert.equal (JSON.stringify(topic), '{"name":"PRIMARY KEY"}');
         }
 	},
 	'primary key asc': {
