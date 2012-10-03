@@ -18,6 +18,7 @@ vows.describe('Tables').addBatch({
             assert.equal (topic.attribute_names()[1], "a2");
         },
         'primary key': function (topic) {
+            assert.equal (topic.pk().length, 1);
             assert.equal (topic.pk()[0].name, "a1");
         },
         'sql create statement': function (topic) {
@@ -34,6 +35,7 @@ vows.describe('Tables').addBatch({
         topic: schema.Table("t1",[schema.Attribute("a1","int",["not null", "primary key asc"]), schema.Attribute("a2","char(10)")]),
 
         'primary key': function (topic) {
+            assert.equal (topic.pk().length, 1);
             assert.equal (topic.pk()[0].name, "a1");
         },
         'sql create statement': function (topic) {
