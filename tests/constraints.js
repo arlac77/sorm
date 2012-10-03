@@ -4,7 +4,7 @@ var vows = require('vows'),
     schema  = require('../lib/schema');
 
 vows.describe('Constraint').addBatch({
-	'{name : not null}': {
+	'not null from JSON': {
         topic: schema.Constraint({name: "not null"}),
         'ddl_statement': function (topic) {
             assert.equal(topic.ddl_statement(), "NOT NULL");
@@ -86,7 +86,7 @@ vows.describe('Constraint').addBatch({
             assert.equal (JSON.stringify(topic), '{"name":"PRIMARY KEY","options":"ASC"}');
         }
 	},
-	'{name:primary key options:asc}': {
+	'primary key from JSON': {
         topic: schema.Constraint({name : "primary key", options : "asc" }),
         'ddl_statement': function (topic) {
             assert.equal(topic.ddl_statement(), "PRIMARY KEY ASC");
@@ -101,7 +101,37 @@ vows.describe('Constraint').addBatch({
             assert.equal (JSON.stringify(topic), '{"name":"PRIMARY KEY","options":"ASC"}');
         }
 	},
+	'default from JSON': {
+        topic: schema.Constraint({name : "default" }),
+        'ddl_statement': function (topic) {
+            assert.equal(topic.ddl_statement(), "DEFAULT NULL");
+        },
+        'toString': function (topic) {
+            assert.equal(topic.toString(), "DEFAULT NULL");
+        },
+        'name': function (topic) {
+            assert.equal(topic.name, "DEFAULT");
+        },
+        'JSON': function (topic) {
+            assert.equal (JSON.stringify(topic), '{"name":"DEFAULT"}');
+        }
+	},
 
+	'default 0 from JSON': {
+        topic: schema.Constraint({name : "default", value : 0 }),
+        'ddl_statement': function (topic) {
+            assert.equal(topic.ddl_statement(), "DEFAULT 0");
+        },
+        'toString': function (topic) {
+            assert.equal(topic.toString(), "DEFAULT 0");
+        },
+        'name': function (topic) {
+            assert.equal(topic.name, "DEFAULT");
+        },
+        'JSON': function (topic) {
+            assert.equal (JSON.stringify(topic), '{"name":"DEFAULT","value":0}');
+        }
+	},
 	'default 0': {
         topic: schema.Constraint("default 0"),
         'ddl_statement': function (topic) {
