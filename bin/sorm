@@ -10,8 +10,11 @@ var commander= require('commander')
    ,async    = require('async')
    ,pkginfo  = require('pkginfo')(module, 'name', 'version')
    ,sqlite3  = require('sqlite3')
+   ,winston  = require('winston')
    ,schema   = require('../lib/schema.js');
 
+
+winston.cli();
 
 commander
   	.version(module.exports.version)
@@ -27,8 +30,8 @@ s.load_ddl_from_db(db,function(error) {
 	
 	s.save(function(error) {
 		if(error)
-			console.log("save error: " + error);
+			winston.error("save error", error);
 		else
-			console.log("saved: " + s.basedir);
+			winston.info("saved", s.basedir);
 	});
 });
