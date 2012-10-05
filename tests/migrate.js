@@ -8,10 +8,6 @@ vows.describe('Schema From File').addBatch({
         topic: function() {
 			schema.Schema("tests/test2.schema",this.callback);
         },
-        'name': function (error, schema) {
-            assert.ifError(error);
-            assert.equal(schema.name, "test2");
-        },
         'version': function (error, schema) {
             assert.ifError(error);
             assert.equal(schema.version, 1);
@@ -56,7 +52,6 @@ vows.describe('Migration').addBatch({
         },
         'version': function(error,schema) {
 			assert.ifError(error);
-
             assert.equal(schema.version, 2);
         },
         'table attributes t1': function(error,schema) {

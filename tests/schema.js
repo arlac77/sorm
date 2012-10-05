@@ -20,10 +20,8 @@ vows.describe('Schema').addBatch({
 			}});
         },
         'default version': function (schema) {
+			console.log(JSON.stringify(schema));
             assert.equal (schema.version, 1);
-        },
-        'default name': function (schema) {
-            assert.equal (schema.name, 'unknown');
         },
         'find table by name': function (schema) {
             assert.equal (schema.tables["t1"].name, "t1");
