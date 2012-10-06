@@ -16,7 +16,6 @@ vows.describe('Constraint').addBatch({
             assert.equal (JSON.stringify(topic), '{"name":"NOT NULL"}');
         }
 	},
-
 	'not null': {
         topic: schema.Constraint("not null"),
         'ddl_statement': function (topic) {
@@ -219,13 +218,28 @@ vows.describe('Constraint').addBatch({
 	"'value_date_ibfk_1' FOREIGN KEY ('type') REFERENCES 'value_type' ('id')" : {
         topic: schema.Constraint("CONSTRAINT 'value_date_ibfk_1' FOREIGN KEY ('type') REFERENCES 'value_type' ('id')"),
         'ddl_statement': function (topic) {
-            assert.equal( topic.ddl_statement(), "CONSTRAINT \"value_date_ibfk_1\" FOREIGN KEY ('type') REFERENCES 'value_type' ('id')");
+            assert.equal( topic.ddl_statement(), "CONSTRAINT value_date_ibfk_1 FOREIGN KEY(type) REFERENCES value_type(id)");
         }
 	},
 	"with trailing space: 'value_date_ibfk_1' FOREIGN KEY ('type') REFERENCES 'value_type' ('id')" : {
         topic: schema.Constraint("CONSTRAINT 'value_date_ibfk_1' FOREIGN KEY ('type') REFERENCES 'value_type' ('id')  "),
         'ddl_statement': function (topic) {
-            assert.equal( topic.ddl_statement(), "CONSTRAINT \"value_date_ibfk_1\" FOREIGN KEY ('type') REFERENCES 'value_type' ('id')");
+            assert.equal( topic.ddl_statement(), "CONSTRAINT value_date_ibfk_1 FOREIGN KEY(type) REFERENCES value_type(id)");
+        }
+	},
+	"FOREIGN KEY" : {
+        topic: schema.Constraint("CONSTRAINT a FOREIGN KEY(type) REFERENCES value_type(id)"),
+        'ddl_statement': function (topic) {
+            assert.equal( topic.ddl_statement(), "CONSTRAINT a FOREIGN KEY(type) REFERENCES value_type(id)");
+        },
+        'foreign_table': function (topic) {
+            assert.equal( topic.foreign_table, "value_type");
+        },
+        'attributes': function (topic) {
+            assert.deepEqual( topic.attributes, ["type"]);
+        },
+        'foreign_attributes': function (topic) {
+            assert.deepEqual( topic.foreign_attributes, ["id"]);
         }
 	}
 }).export(module);
