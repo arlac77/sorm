@@ -21,19 +21,33 @@ commander
 	.option('--database <file>', 'sqlite3 database file')
 	.option('--schema <file>', 'schema definition file')
 	.option('--ws', 'write schema from database into file')
+	.option('--verbose', 'be more verbose')
   	.parse(process.argv);
 
 
-var s  = schema.Schema(commander.schema);
-var db = new sqlite3.Database(commander.database);
+var s;
+var db;
 
-if(commander.ws) {
+if(commander.schema) {
+	s = schema.Schema(commander.schema);
+}
+
+if(commander.database) {
+	db = new sqlite3.Database(commander.database);
+
+	//s = schema.Schema({});
+	
 	s.load_ddl_from_db(db,function(error) {
-		s.save(function(error) {
-			if(error)
-				winston.error("save error", error);
-			else
-				winston.info("saved", s.basedir);
+		
+		if(commander.verbose) console.info(JSON.stringify(s.versions,undefined,'\t'));
+		
+		if(commander.ws) {
+			s.save(function(error) {
+				if(error)
+					winston.error("Schema save error", error);
+				else
+					winston.info("Schema saved", s.basedir);
 				});
+			}
 	});
 }
