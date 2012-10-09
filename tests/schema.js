@@ -10,7 +10,7 @@ mkdirp.sync(testdir,'0755');
 
 vows.describe('Schema').addBatch({
     'Schema Values': {
-        topic:  function() { return schema.Schema({ tables : {
+        topic:  function() { return schema.Schema({tables : {
 				"t1" : {
 					"attributes": [
                 		{ name: "a1", type: "int", constraints: ["not null", "primary key"] },
@@ -20,8 +20,7 @@ vows.describe('Schema').addBatch({
 			}});
         },
         'default version': function (schema) {
-			console.log(JSON.stringify(schema));
-            assert.equal (schema.version, 1);
+            assert.equal (schema.versions["35f7925e0ff70acf332a4f0d35687f3d0d17e584"].tag, '1');
         },
         'find table by name': function (schema) {
             assert.equal (schema.tables["t1"].name, "t1");

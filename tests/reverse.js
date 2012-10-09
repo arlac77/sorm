@@ -32,7 +32,7 @@ vows.describe('Schema From File').addBatch({
 			},
             'version' : function(error,schema) {
                 assert.ifError(error);
-				assert.equal(schema.version, 1);
+				assert.equal(schema.versions['e7f242ce7895bc16c3b3c01e47318064921d3920'].tag, 1);
 			},
             'comment_date' : function(error,schema) {
                 assert.ifError(error);
