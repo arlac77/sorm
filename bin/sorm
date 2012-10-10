@@ -21,6 +21,7 @@ commander
 	.option('--database <file>', 'sqlite3 database file')
 	.option('--schema <file>', 'schema definition file')
 	.option('--ws', 'write schema from database into file')
+	.option('--execddl','execute schema ddl create/migrate')
 	.option('--verbose', 'be more verbose')
   	.parse(process.argv);
 
@@ -29,25 +30,33 @@ var s;
 var db;
 
 if(commander.schema) {
-	s = schema.Schema(commander.schema);
-}
+	s = schema.Schema(commander.schema,function(error) {
 
-if(commander.database) {
-	db = new sqlite3.Database(commander.database);
+	if(commander.database) {
+		db = new sqlite3.Database(commander.database);
 
-	//s = schema.Schema({});
-	
-	s.load_ddl_from_db(db,function(error) {
-		
-		if(commander.verbose) console.info(JSON.stringify(s.versions,undefined,'\t'));
-		
-		if(commander.ws) {
-			s.save(function(error) {
+		if(commander.execddl) {
+			s.exec_ddl(db,{},function(error) {
 				if(error)
-					winston.error("Schema save error", error);
+					winston.error("ddl error", error);
 				else
-					winston.info("Schema saved", s.basedir);
+					winston.info("ddl executed");
+				});
+			return;
+		}
+
+		s.load_ddl_from_db(db,function(error) {
+			if(commander.verbose) console.info(JSON.stringify(s.versions,undefined,'\t'));
+
+			if(commander.ws) {
+				s.save(function(error) {
+					if(error)
+						winston.error("Schema save error", error);
+						else
+						winston.info("Schema saved", s.basedir);
 				});
 			}
+		});
+	}
 	});
 }
