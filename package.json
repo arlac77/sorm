@@ -16,7 +16,7 @@
     "email": "Markus.Felten@gmx.de"
   },
   "dependencies": {
-    "async": ">=0.1.15",
+    "async": ">=2.1.5",
     "sqlite3": ">=2.1",
     "pkginfo": ">=0.2.3",
     "mkdirp": ">=0.3.1",
