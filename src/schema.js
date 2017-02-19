@@ -12,9 +12,8 @@ var crypto = require('crypto'),
 
 Object.defineProperty(Object.prototype, 'spawn', {
   value: function (props) {
-    var defs = {},
-      key;
-    for (key in props) {
+    const defs = {};
+    for (const key in props) {
       if (props.hasOwnProperty(key)) {
         defs[key] = {
           value: props[key],
@@ -56,23 +55,23 @@ var orderedConstraints = [];
 var constraints = {};
 
 var RootConstraint = {
-  ddl_statement: function () {
+  ddl_statement() {
     return this.name;
   },
-  toJSON: function () {
+  toJSON() {
     return {
       name: this.name
     };
   },
-  toString: function () {
+  toString() {
     return this.ddl_statement();
   }
 };
 
 function parse_constraints(ps, cs) {
-  var gotSomething;
+  let gotSomething;
 
-  var str = ps.input;
+  let str = ps.input;
 
   if (str) {
     do {
@@ -108,7 +107,7 @@ function parse_constraints(ps, cs) {
 }
 
 function create_constraint(definition) {
-  var c = RootConstraint.spawn(definition);
+  const c = RootConstraint.spawn(definition);
   orderedConstraints.push(c);
   constraints[c.name] = c;
 }
@@ -117,7 +116,7 @@ create_constraint({
   name: 'PRIMARY KEY',
   regex: /^primary\s+key(\s+(asc|desc))?\s*(\(([^/)]+)\))?(.*)/im,
   toJSON: function () {
-    var o = {
+    const o = {
       name: this.name
     };
     if (this.options) o.options = this.options.toUpperCase();
@@ -125,7 +124,7 @@ create_constraint({
     return o;
   },
   ddl_statement: function () {
-    var s = this.name;
+    let s = this.name;
     if (this.options) {
       s += ' ' + this.options.toUpperCase();
     }
@@ -135,7 +134,7 @@ create_constraint({
     return s;
   },
   parse: function (matches, cs, constraint) {
-    var properties = {};
+    const properties = {};
     if (matches[2]) properties.options = matches[2];
     if (matches[3]) {
       properties.attributes = matches[4].split(/,/);
@@ -167,14 +166,14 @@ create_constraint({
       value: this.value
     };
   },
-  ddl_statement: function () {
-    var v = 'NULL';
+  ddl_statement() {
+    let v = 'NULL';
     if (typeof this.value === 'string') v = quote(this.value);
     else if (typeof this.value === 'number') v = this.value;
     return this.name + ' ' + v;
   },
-  parse: function (matches, cs, constraint) {
-    var properties = {};
+  parse(matches, cs, constraint) {
+    const properties = {};
     if (matches[2]) properties.value = unquote(matches[2]);
     if (matches[3]) properties.value = unquote(matches[3]);
     if (matches[4]) properties.value = parseInt(matches[4]);
@@ -186,7 +185,7 @@ create_constraint({
 create_constraint({
   name: 'FOREIGN KEY',
   regex: /^CONSTRAINT\s+((\'[^\']+\')|(\"[^\"]+\")|([a-z][a-z_0-9]*))\s+FOREIGN\s+KEY\s*\(([^\)]+)\)\s*REFERENCES\s*((\'[^\']+\')|(\"[^\"]+\")|([a-z][a-z_0-9]*))\s*\(([^\)]+)\)(.*)/im,
-  toJSON: function () {
+  toJSON() {
     return {
       name: this.name,
       id: this.id,
@@ -195,12 +194,12 @@ create_constraint({
       foreign_attributes: this.foreign_attributes
     };
   },
-  ddl_statement: function () {
+  ddl_statement() {
     return 'CONSTRAINT ' + optional_quote(this.id) +
       ' FOREIGN KEY(' + this.attributes.join(',') + ') REFERENCES ' +
       optional_quote(this.foreign_table) + '(' + this.foreign_attributes.join(',') + ')';
   },
-  parse: function (matches, cs, constraint) {
+  parse(matches, cs, constraint) {
     cs.push(Constraint(constraint, {
       id: unquote(matches[1]),
       attributes: unquote_list(matches[5]),
@@ -218,15 +217,15 @@ create_constraint({
  * @this {Constraint}
  * @param {options} either a string or a object with name and attributes.
  */
-var Constraint = function (type, properties) {
+const Constraint = function (type, properties) {
 
   if (typeof type === 'string') {
-    var c = constraints[type.toUpperCase()];
+    let c = constraints[type.toUpperCase()];
     if (c) {
       return c;
     }
 
-    var cs = [];
+    const cs = [];
 
     parse_constraints({
       input: type
@@ -241,8 +240,7 @@ var Constraint = function (type, properties) {
     return c;
   } else if (properties === undefined) {
     properties = {};
-    let key;
-    for (key in type) {
+    for (const key in type) {
       if (key !== 'name')
         properties[key] = type[key];
     }
@@ -255,15 +253,15 @@ var Constraint = function (type, properties) {
 
 
 const RootAttribute = {
-  'ddl_statement': function () {
-    var c = [this.name, this.type];
+  ddl_statement() {
+    const c = [this.name, this.type];
     for (var i in this.constraints)
       c.push(this.constraints[i].ddl_statement());
 
     return c.join(' ');
   },
-  toJSON: function () {
-    var o = {
+  toJSON() {
+    const o = {
       name: this.name,
       type: this.type
     };
@@ -284,13 +282,13 @@ const RootAttribute = {
  * @param {type} attribute type.
  * @param {constraints} Array of Constraints.
  */
-var Attribute = function (name, type, cs) {
+const Attribute = function (name, type, cs) {
 
-  var constraints = [];
+  const constraints = [];
 
   if (cs instanceof Array) {
-    for (var i in cs) {
-      var csi = cs[i];
+    for (const i in cs) {
+      const csi = cs[i];
       constraints[i] = csi instanceof Constraint ? csi : Constraint(csi);
     }
   } else {
@@ -307,48 +305,46 @@ var Attribute = function (name, type, cs) {
 };
 
 
-var RootTable = {
-  'ddl_statement': function () {
-    var atts = [];
-    var i;
+const RootTable = {
+  ddl_statement() {
+    const atts = [];
 
-    for (i in this.attributes) {
+    for (const i in this.attributes) {
       atts.push(this.attributes[i].ddl_statement());
     }
 
-    for (i in this.constraints) {
+    for (const i in this.constraints) {
       atts.push(this.constraints[i].ddl_statement());
     }
 
     return 'CREATE TABLE ' + this.name + '(' + atts.join(',') + ')';
   },
-  toJSON: function () {
-    var o = {
+  toJSON() {
+    const o = {
       attributes: this.attributes
     };
     if (this.constraints && this.constraints.length > 0) o.constraints = this.constraints;
     return o;
   },
-  toString: function () {
+  toString() {
     return this.ddl_statement();
   },
-  'attribute_names': function () {
-    var names = [];
-    var i;
-    for (i in this.attributes) names.push(this.attributes[i].name);
+  attribute_names() {
+    const names = [];
+    for (const i in this.attributes) names.push(this.attributes[i].name);
     return names;
   },
-  'insert_sql': function (attributes) {
-    var qm = [];
+  insert_sql(attributes) {
+    const qm = [];
 
-    for (var k in attributes) qm.push('?');
+    for (const k in attributes) qm.push('?');
 
     return 'INSERT INTO ' + this.name + '(' + attributes.join(',') + ') VALUES(' + qm.join(',') + ')';
   },
-  'update_sql': function (attributes) {
-    var j = this.pk().length;
-    var a = [];
-    for (var i in attributes) {
+  update_sql(attributes) {
+    const j = this.pk().length;
+    const a = [];
+    for (const i in attributes) {
       if (i >= j)
         a.push(attributes[i] + '=?');
     }
@@ -356,46 +352,45 @@ var RootTable = {
     if (a.length === 0) return undefined;
     return 'UPDATE ' + this.name + ' SET ' + a.join(',') + ' WHERE ' + this.pk_predicate();
   },
-  'attribute': function (name) {
-    for (var i in this.attributes) {
-      var a = this.attributes[i];
+  attribute(name) {
+    for (const i in this.attributes) {
+      const a = this.attributes[i];
       if (a.name === name) return a;
     }
     return undefined;
   },
-  'pk': function () {
-    var pk = [];
-    var i, j, c;
+  pk() {
+    const pk = [];
 
-    for (i in this.attributes) {
+    for (const i in this.attributes) {
       var a = this.attributes[i];
-      for (j in a.constraints) {
-        c = a.constraints[j];
+      for (const j in a.constraints) {
+        const c = a.constraints[j];
         if (c.name.search(/PRIMARY KEY/) >= 0) pk.push(a);
       }
     }
 
-    for (i in this.constraints) {
-      c = this.constraints[i];
+    for (const i in this.constraints) {
+      const c = this.constraints[i];
 
       if (c.name.search(/PRIMARY KEY/) >= 0) {
-        for (j in c.attributes) pk.push(this.attribute(c.attributes[j]));
+        for (const j in c.attributes) pk.push(this.attribute(c.attributes[j]));
       }
     }
 
     return pk;
   },
-  'pk_predicate': function (alias, values) {
-    var ps = [];
-    var pk = this.pk();
+  pk_predicate(alias, values) {
+    const ps = [];
+    const pk = this.pk();
 
-    for (var i in pk) {
+    for (const i in pk) {
       ps.push((alias ? [alias, pk[i].name].join('.') : pk[i].name) + '=?');
     }
 
     return ps.join(' AND ');
   },
-  'next_pk': function (db, callback) {
+  next_pk(db, callback) {
     db.get('SELECT MAX(' + this.pk()[0].name + ') + 1 FROM ' + this.name, callback);
   }
 };
@@ -409,18 +404,16 @@ var RootTable = {
  * @param {type} attribute type.
  * @param {constraints} Array of Constraints.
  */
-var Table = function (name, attributes, constraints) {
+const Table = function (name, attributes, constraints) {
 
-  var i;
-
-  for (i in attributes) {
-    var a = attributes[i];
+  for (const i in attributes) {
+    const a = attributes[i];
     if (!(a instanceof Attribute))
       attributes[i] = Attribute(a.name, a.type, a.constraints);
   }
 
-  for (i in constraints) {
-    var c = constraints[i];
+  for (const i in constraints) {
+    const c = constraints[i];
     if (!(c instanceof Constraint))
       constraints[i] = Constraint(c);
   }
@@ -434,7 +427,7 @@ var Table = function (name, attributes, constraints) {
 
 
 function tables_from_db(db, callback) {
-  db.all("SELECT name,sql FROM sqlite_master WHERE type='table'", function (error, rows) {
+  db.all("SELECT name,sql FROM sqlite_master WHERE type='table'", (error, rows) => {
     if (error) {
       callback(error);
       return;
@@ -493,35 +486,30 @@ function tables_from_db(db, callback) {
   });
 }
 
-var RootSchema = Object.create({
+const RootSchema = Object.create({
   'migrations': {},
-  'load': function (cb) {
-    var t = this;
-
-    fs.readFile(this.schema_json_file, function (error, data) {
+  load(cb) {
+    fs.readFile(this.schema_json_file, (error, data) => {
       if (error) {
         if (cb) cb(error);
         return;
       }
-      t.load_from_object(JSON.parse(data));
-      if (cb) cb(undefined, t);
+      this.load_from_object(JSON.parse(data));
+      if (cb) cb(undefined, this);
     });
   },
-  'save': function (callback) {
-    var t = this;
-    mkdirp(t.basedir, '0755', function (error) {
-      fs.writeFile(t.schema_json_file, JSON.stringify(t, undefined, '\t'), callback);
-    });
+  save(callback) {
+    mkdirp(t.basedir, '0755', error => fs.writeFile(this.schema_json_file, JSON.stringify(t, undefined, '\t'), callback));
   },
-  'load_from_object': function (object) {
-    var tables = {};
+  load_from_object(object) {
+    const tables = {};
 
-    for (var i in object.tables) {
-      var t = object.tables[i];
+    for (const i in object.tables) {
+      const t = object.tables[i];
       tables[i] = Table(i, t.attributes, t.constraints);
     }
 
-    for (var j in object) {
+    for (const j in object) {
       this[j] = object[j];
     }
 
@@ -534,27 +522,25 @@ var RootSchema = Object.create({
       };
     }
   },
-  'load_ddl_from_db': function (db, callback) {
-    var t = this;
-
-    tables_from_db(db, function (error, tables) {
+  load_ddl_from_db(db, callback) {
+    tables_from_db(db, (error, tables) => {
       if (error) {
         callback(error);
         return;
       }
-      t.tables = tables;
+      this.tables = tables;
 
-      if (!t.versions) {
-        t.versions = {};
-        t.versions[t.schemaHash] = {
+      if (!this.versions) {
+        this.versions = {};
+        this.versions[this.schemaHash] = {
           tag: 1
         };
       }
 
-      callback(error, t);
+      callback(error, this);
     });
   },
-  'toJSON': function () {
+  'toJSON'() {
     return {
       versions: this.versions,
       migrations: this.migrations,
@@ -562,28 +548,26 @@ var RootSchema = Object.create({
     };
   },
 
-  'exec_ddl': function (db, createOptions, callback) {
+  'exec_ddl'(db, createOptions, callback) {
 
     if (!createOptions)
       createOptions = {
         'load_data': true
       };
 
-    var create_tables = {};
-    var alter_tables = [];
+    const create_tables = {};
+    const alter_tables = [];
 
-    for (var j in this.tables) {
-      var t = this.tables[j];
+    for (const j in this.tables) {
+      const t = this.tables[j];
       create_tables[t.name] = t;
     }
 
-    var presentHash = crypto.createHash('sha1');
+    const presentHash = crypto.createHash('sha1');
+    const basedir = this.basedir;
+    const schema = this;
 
-    var basedir = this.basedir;
-
-    var schema = this;
-
-    tables_from_db(db, function (error, present_tables) {
+    tables_from_db(db,  (error, present_tables) => {
       if (error) {
         callback(error);
         return;
@@ -592,17 +576,16 @@ var RootSchema = Object.create({
       winston.info('present tables', Object.keys(present_tables));
       winston.info('desired tables', Object.keys(create_tables));
 
-      var steps = [];
-      var pre_steps = [];
-      var post_steps = [];
-      var t;
+      const steps = [];
+      const pre_steps = [];
+      const post_steps = [];
 
-      for (var i in present_tables) {
-        var pt = present_tables[i];
+      for (const i in present_tables) {
+        const pt = present_tables[i];
 
         presentHash.update(pt.ddl_statement());
 
-        t = create_tables[pt.name];
+        const t = create_tables[pt.name];
         if (t) {
           var csql = t.ddl_statement();
 
@@ -621,8 +604,8 @@ var RootSchema = Object.create({
         }
       }
 
-      for (var j in create_tables) {
-        t = create_tables[j];
+      for (const j in create_tables) {
+        const t = create_tables[j];
         winston.info('ddl', {
           sql: t.ddl_statement()
         });
@@ -653,20 +636,16 @@ var RootSchema = Object.create({
 		*/
 
       async.map(pre_steps,
-        function (sql, cb) {
-          db.run(sql, cb);
-        },
-        function (error) {
+        (sql, cb) => db.run(sql, cb),
+         error => {
           if (error) {
             callback(error, this);
             return;
           }
 
           async.map(steps.concat(post_steps),
-            function (sql, cb) {
-              db.run(sql, cb);
-            },
-            function (error) {
+             (sql, cb) => db.run(sql, cb),
+             error => {
               if (error) {
                 callback(error, this);
                 return;
@@ -674,7 +653,7 @@ var RootSchema = Object.create({
 
               if (createOptions.load_data) {
                 var djs = path.join(basedir, 'data.json');
-                fs.stat(djs, function (error, stats) {
+                fs.stat(djs, (error, stats) => {
                   if (error) return;
                   schema.migrate_data(db, JSON.parse(fs.readFileSync(djs)), callback);
                 });
@@ -686,16 +665,15 @@ var RootSchema = Object.create({
         });
     });
   },
-  'migrate_data': function (db, data_sets, callback) {
-    var update = function (table, sql, values) {
-      var i;
-      var v = [];
-      var l = table.pk().length;
+  'migrate_data'(db, data_sets, callback) {
+    const update = function (table, sql, values) {
+      const v = [];
+      const l = table.pk().length;
 
-      for (i = l; i < values.length; i++) v.push(values[i]);
-      for (i = 0; i < l; i++) v.push(values[i]);
+      for (let i = l; i < values.length; i++) v.push(values[i]);
+      for (let i = 0; i < l; i++) v.push(values[i]);
 
-      db.get(sql, v, function (error) {
+      db.get(sql, v, error => {
         if (error) {
           winston.error(error, {
             sql: sql + ' : ' + v.join(',')
@@ -704,22 +682,22 @@ var RootSchema = Object.create({
       });
     };
 
-    var insert = function (table, sql1, sql2, values) {
-      db.get(sql1, values, function (error) {
+    const insert = function (table, sql1, sql2, values) {
+      db.get(sql1, values, error => {
         if (error) {
           if (sql2 !== undefined) update(table, sql2, values);
         }
       });
     };
 
-    for (var i in data_sets) {
-      var data = data_sets[i];
-      var t = this.table(data.table);
+    for (const i in data_sets) {
+      const data = data_sets[i];
+      const t = this.table(data.table);
 
-      var updateSql = t.update_sql(data.attributes);
-      var insertSql = t.insert_sql(data.attributes);
+      const updateSql = t.update_sql(data.attributes);
+      const insertSql = t.insert_sql(data.attributes);
 
-      for (var j in data.values) {
+      for (const j in data.values) {
         insert(t, insertSql, updateSql, data.values[j]);
       }
     }

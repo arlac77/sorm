@@ -1,10 +1,11 @@
 #!/usr/bin/env node
+/* jslint node: true, esnext: true */
 
-"use strict";
+'use strict';
 
-var commander= require('commander')
+const commander= require('commander')
    ,fs       = require('fs')
-   ,os       = require("os")
+   ,os       = require('os')
    ,util     = require('util')
    ,path     = require('path')
    ,async    = require('async')
@@ -25,35 +26,31 @@ commander
 	.option('--verbose', 'be more verbose')
   	.parse(process.argv);
 
-
-var s;
-var db;
-
 if(commander.schema) {
-	s = schema.Schema(commander.schema,function(error) {
+	const s = schema.Schema(commander.schema, error => {
 
 	if(commander.database) {
-		db = new sqlite3.Database(commander.database);
+		const db = new sqlite3.Database(commander.database);
 
 		if(commander.execddl) {
 			s.exec_ddl(db,{},function(error) {
 				if(error)
-					winston.error("ddl error", error);
+					winston.error('ddl error', error);
 				else
-					winston.info("ddl executed");
+					winston.info('ddl executed');
 				});
 			return;
 		}
 
-		s.load_ddl_from_db(db,function(error) {
+		s.load_ddl_from_db(db,error => {
 			if(commander.verbose) console.info(JSON.stringify(s.versions,undefined,'\t'));
 
 			if(commander.ws) {
-				s.save(function(error) {
+				s.save(error => {
 					if(error)
-						winston.error("Schema save error", error);
-						else
-						winston.info("Schema saved", s.basedir);
+						winston.error('Schema save error', error);
+					else
+						winston.info('Schema saved', s.basedir);
 				});
 			}
 		});
