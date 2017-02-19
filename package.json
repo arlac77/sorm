@@ -14,6 +14,7 @@
     "name": "Markus Felten",
     "email": "Markus.Felten@gmx.de"
   },
+  "license": "BSD-2-Clause",
   "dependencies": {
     "async": ">=2.1.5",
     "sqlite3": ">=2.1",
@@ -52,5 +53,14 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:arlac77/sorm.git"
-  }
+  },
+  "nyc": {
+  "include": [
+    "dist/**/*.js"
+  ],
+  "reporter": [
+    "lcov"
+  ],
+  "report-dir": "./coverage"
+}
 }
