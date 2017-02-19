@@ -3,7 +3,7 @@ var vows    = require('vows'),
 	mkdirp  = require('mkdirp'),
 	path    = require('path'),
     sqlite3 = require('sqlite3'),
-    schema  = require('../lib/schema');
+    schema  = require('../dist/schema');
 
 var testdir = path.join("/tmp","vows" + process.pid);
 mkdirp.sync(testdir,'0755');

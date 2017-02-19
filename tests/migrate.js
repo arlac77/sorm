@@ -1,7 +1,7 @@
 var vows = require('vows'),
     assert = require('assert'),
     sqlite3 = require('sqlite3'),
-    schema  = require('../lib/schema');
+    schema  = require('../dist/schema');
 
 vows.describe('Schema From File').addBatch({
     'Schema Values': {
@@ -13,7 +13,7 @@ vows.describe('Schema From File').addBatch({
             assert.equal(schema.version, 1);
         },
         'find table by name': function (error,schema) {
-            assert.ifError(error);			
+            assert.ifError(error);
             assert.equal(schema.tables["t1"].name, "t1");
         },
         'table attributes are there': function (error, schema) {
@@ -59,7 +59,7 @@ vows.describe('Migration').addBatch({
 
             assert.equal(schema.tables['t1'].name,"t1");
             assert.equal(schema.tables['t2'].name,"t2");
-			
+
             assert.equal(schema.tables['t1'].pk().length,1);
             assert.equal(schema.tables['t1'].pk()[0].name,"a1");
         },

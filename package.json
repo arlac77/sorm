@@ -2,7 +2,6 @@
   "name": "sorm",
   "description": "Simple Object Relational Mapper with Node JS",
   "version": "0.2.1",
-  "private": false,
   "keywords": [
     "sqlite3",
     "schema",
@@ -24,14 +23,31 @@
     "commander": ">=1"
   },
   "devDependencies": {
-    "vows": ">=0.6"
+    "vows": ">=0.6",
+    "chai": "^3.5.0",
+    "cz-conventional-changelog": "^1.2.0",
+    "jsdoc-to-markdown": "^3.0.0",
+    "markdown-doctest": "^0.9.1",
+    "mocha": "^3.2.0",
+    "mocha-lcov-reporter": "^1.2.0",
+    "nyc": "^10.1.2",
+    "rollup": "^0.41.4",
+    "semantic-release": "^6.3.6"
   },
-  "main": "lib/schema.js",
+  "module": "src/schema.js",
+  "main": "dist/schema.js",
   "bin": {
     "sorm": "bin/sorm"
   },
   "scripts": {
-    "test": "vows tests/*.js --isolate --spec"
+    "cover": "nyc npm test",
+    "test": "vows tests/*.js --isolate --spec",
+    "docs": "jsdoc2md -l off -t doc/README.hbs -f src/*.js >README.md",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "prepublish": "rollup --output=dist/schema.js -c -- src/schema.js",
+    "pretest": "npm run prepublish",
+    "posttest": "markdown-doctest",
+    "precover": "npm run prepublish"
   },
   "repository": {
     "type": "git",

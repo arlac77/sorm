@@ -1,7 +1,7 @@
 var vows = require('vows'),
     assert = require('assert'),
     sqlite3 = require('sqlite3'),
-    schema  = require('../lib/schema');
+    schema  = require('../dist/schema');
 
 
 vows.describe('Schema From File').addBatch({
@@ -57,7 +57,7 @@ vows.describe('Schema From File').addBatch({
 				assert.equal(t.attributes[0].name,'date');
 				assert.equal(t.attributes[0].type,'datetime');
 				assert.equal(t.attributes[0].constraints[0].ddl_statement(),'NOT NULL');
-			
+
 				assert.equal(t.attributes[1].name,'type');
 				assert.equal(t.attributes[1].type,'char(2)');
 				assert.equal(t.attributes[1].constraints[0].ddl_statement(),'NOT NULL');
@@ -80,7 +80,7 @@ vows.describe('Schema From File').addBatch({
 				assert.equal(t.attributes[0].name,'id');
 				assert.equal(t.attributes[0].type,'char(2)');
 				assert.equal(t.attributes[0].constraints[0].ddl_statement(),'NOT NULL');
-			
+
 				assert.equal(t.attributes[1].name,'name');
 				assert.equal(t.attributes[1].type,'varchar(65)');
 				assert.equal(t.attributes[1].constraints[0].ddl_statement(),'NOT NULL');
@@ -88,11 +88,11 @@ vows.describe('Schema From File').addBatch({
 				assert.equal(t.attributes[2].name,'unit');
 				assert.equal(t.attributes[2].type,'varchar(65)');
 				assert.equal(t.attributes[2].constraints[0].ddl_statement(),'NOT NULL');
-				
+
 				assert.equal(t.attributes[3].name,'ord');
 				assert.equal(t.attributes[3].type,'int(11)');
 				assert.equal(t.attributes[3].constraints[0].ddl_statement(),'NOT NULL');
-				
+
 				assert.equal(t.attributes[4].name,'color');
 				assert.equal(t.attributes[4].type,'varchar(20)');
 				assert.equal(t.attributes[4].constraints[0].ddl_statement(),'DEFAULT NULL');

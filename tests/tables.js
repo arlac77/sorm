@@ -1,7 +1,7 @@
 var vows = require('vows'),
     assert = require('assert'),
     sqlite3 = require('sqlite3'),
-    schema  = require('../lib/schema');
+    schema  = require('../dist/schema');
 
 vows.describe('Tables').addBatch({
     'Table Values': {

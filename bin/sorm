@@ -11,7 +11,7 @@ var commander= require('commander')
    ,pkginfo  = require('pkginfo')(module, 'name', 'version')
    ,sqlite3  = require('sqlite3')
    ,winston  = require('winston')
-   ,schema   = require('../lib/schema.js');
+   ,schema   = require('../src/schema.js');
 
 
 winston.cli();
