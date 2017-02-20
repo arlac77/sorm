@@ -8,12 +8,14 @@
     "migration"
   ],
   "engines": {
-    "node": ">=6.9"
+    "node": ">=6.9.4"
   },
-  "contributors": [{
-    "name": "Markus Felten",
-    "email": "markus.felten@gmx.de"
-  }],
+  "contributors": [
+    {
+      "name": "Markus Felten",
+      "email": "markus.felten@gmx.de"
+    }
+  ],
   "license": "BSD-2-Clause",
   "dependencies": {
     "async": ">=2.1.5",
@@ -62,5 +64,14 @@
       "lcov"
     ],
     "report-dir": "./coverage"
+  },
+  "bugs": {
+    "url": "https://github.com/arlac77/sorm/issues"
+  },
+  "homepage": "https://github.com/arlac77/sorm#readme",
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
