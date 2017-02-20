@@ -206,7 +206,7 @@ create_constraint({
  * @this {Constraint}
  * @param {options} either a string or a object with name and attributes.
  */
-const Constraint = function (type, properties) {
+export function Constraint(type, properties) {
 
   if (typeof type === 'string') {
     let c = constraints[type.toUpperCase()];
@@ -238,8 +238,7 @@ const Constraint = function (type, properties) {
   }
 
   return type.spawn(properties);
-};
-
+}
 
 const RootAttribute = {
   ddl_statement() {
@@ -271,7 +270,7 @@ const RootAttribute = {
  * @param {type} attribute type.
  * @param {constraints} Array of Constraints.
  */
-const Attribute = function (name, type, cs) {
+export function Attribute(name, type, cs) {
 
   const constraints = [];
 
@@ -291,7 +290,7 @@ const Attribute = function (name, type, cs) {
     type: type,
     constraints: constraints
   });
-};
+}
 
 
 const RootTable = {
@@ -389,7 +388,7 @@ const RootTable = {
  * @param {type} attribute type.
  * @param {constraints} Array of Constraints.
  */
-const Table = function (name, attributes, constraints) {
+export function Table(name, attributes, constraints) {
 
   for (const i in attributes) {
     const a = attributes[i];
@@ -408,7 +407,7 @@ const Table = function (name, attributes, constraints) {
     attributes: attributes,
     constraints: constraints
   });
-};
+}
 
 
 function tables_from_db(db, callback) {
@@ -719,7 +718,7 @@ const RootSchema = Object.create({
  * @this {Schema}
  * @param {options} string value holding schmema fs directory.
  */
-const Schema = function (options, callback) {
+export function Schema(options, callback) {
 
   if (typeof options === 'string') {
     const schema = RootSchema.spawn({
@@ -738,9 +737,4 @@ const Schema = function (options, callback) {
 
     return schema;
   }
-};
-
-exports.Schema = Schema;
-exports.Table = Table;
-exports.Attribute = Attribute;
-exports.Constraint = Constraint;
+}

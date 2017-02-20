@@ -3,7 +3,9 @@
 const vows = require('vows'),
   assert = require('assert'),
   sqlite3 = require('sqlite3'),
-  schema = require('../dist/schema');
+  {
+    Schema
+  } = require('../dist/schema');
 
 
 vows.describe('Schema From File').addBatch({
@@ -13,7 +15,7 @@ vows.describe('Schema From File').addBatch({
       },
       'reverse from database': {
         topic(db) {
-            const s = schema.Schema('/tmp/test.schema');
+            const s = Schema('/tmp/test.schema');
             s.load_ddl_from_db(db, this.callback);
           },
           't1 detected': function (error, schema) {
@@ -33,7 +35,7 @@ vows.describe('Schema From File').addBatch({
       },
       'reverse from database': {
         topic(db) {
-            const s = schema.Schema('/tmp/test.schema');
+            const s = Schema('/tmp/test.schema');
             s.load_ddl_from_db(db, this.callback);
           },
           version(error, schema) {
