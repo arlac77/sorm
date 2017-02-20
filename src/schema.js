@@ -78,10 +78,10 @@ function parse_constraints(ps, cs) {
       gotSomething = false;
       if (!str) break;
 
-      for (var i in orderedConstraints) {
-        var oc = orderedConstraints[i];
+      for (const i in orderedConstraints) {
+        const oc = orderedConstraints[i];
 
-        var m = str.match(oc.regex);
+        const m = str.match(oc.regex);
 
         //winston.log(str + " <> " + oc.regex + " ::: "  + m);
 
@@ -115,7 +115,7 @@ function create_constraint(definition) {
 create_constraint({
   name: 'PRIMARY KEY',
   regex: /^primary\s+key(\s+(asc|desc))?\s*(\(([^/)]+)\))?(.*)/im,
-  toJSON: function () {
+  toJSON() {
     const o = {
       name: this.name
     };
@@ -123,7 +123,7 @@ create_constraint({
     if (this.attributes) o.attributes = this.attributes;
     return o;
   },
-  ddl_statement: function () {
+  ddl_statement() {
     let s = this.name;
     if (this.options) {
       s += ' ' + this.options.toUpperCase();
@@ -133,7 +133,7 @@ create_constraint({
     }
     return s;
   },
-  parse: function (matches, cs, constraint) {
+  parse(matches, cs, constraint) {
     const properties = {};
     if (matches[2]) properties.options = matches[2];
     if (matches[3]) {
@@ -160,7 +160,7 @@ create_constraint({
 create_constraint({
   name: 'DEFAULT',
   regex: /^default\s+(('[^']*')|("[^"]*")|(\d+)|(null))(.*)/im,
-  toJSON: function () {
+  toJSON() {
     return {
       name: this.name,
       value: this.value
@@ -433,18 +433,18 @@ function tables_from_db(db, callback) {
       return;
     }
 
-    var tables = {};
-    for (var i in rows) {
-      var row = rows[i];
-      var sql = row.sql.split(/\n/).join(' ');
+    let tables = {};
+    for (const i in rows) {
+      const row = rows[i];
+      const sql = row.sql.split(/\n/).join(' ');
       //console.log("input          : " + sql);
 
-      var m = sql.match(/CREATE\s+TABLE\s+((\"([^\"]+)\")|([a-z][a-z0-9_]*))\s*\((.*)/im);
+      const m = sql.match(/CREATE\s+TABLE\s+((\"([^\"]+)\")|([a-z][a-z0-9_]*))\s*\((.*)/im);
       if (m) {
-        var attributes = [];
-        var constraints = [];
-        var name = m[3] ? m[3] : m[4];
-        var ps = {
+        const attributes = [];
+        const constraints = [];
+        const name = m[3] ? m[3] : m[4];
+        const ps = {
           input: m[5]
         };
 
@@ -452,13 +452,13 @@ function tables_from_db(db, callback) {
           if (parse_constraints(ps, constraints)) {
             //console.log("after constra A: " + ps.input);
           } else {
-            m = ps.input.match(/^\s*((\"[^\"]+\")|([a-z][a-z_0-9]*))\s+([a-z][a-z0-9_]*(\([^\)]+\))?)[\s,]+(.*)/i);
+            const m = ps.input.match(/^\s*((\"[^\"]+\")|([a-z][a-z_0-9]*))\s+([a-z][a-z0-9_]*(\([^\)]+\))?)[\s,]+(.*)/i);
             if (m) {
-              var aname = unquote(m[1]);
-              var type = m[4];
+              const aname = unquote(m[1]);
+              const type = m[4];
               ps.input = m[6];
 
-              var cs = [];
+              const cs = [];
               parse_constraints(ps, cs);
 
               if (m = ps.input.match(/^\s*,\s*(.*)/)) {
@@ -587,7 +587,7 @@ const RootSchema = Object.create({
 
         const t = create_tables[pt.name];
         if (t) {
-          var csql = t.ddl_statement();
+          const csql = t.ddl_statement();
 
           if (csql === pt.ddl_statement()) {
             delete create_tables[t.name];
