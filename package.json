@@ -44,7 +44,7 @@
   },
   "scripts": {
     "cover": "nyc npm test",
-    "test": "mocha tests/*_test.js",
+    "test": "vows tests/*.js --isolate --spec",
     "docs": "jsdoc2md -l off -t doc/README.hbs -f src/*.js >README.md",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "prepublish": "rollup --output=dist/schema.js -c -- src/schema.js",
