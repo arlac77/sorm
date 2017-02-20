@@ -37,40 +37,33 @@ function optional_quote(str) {
 }
 
 function unquote_list(str) {
-  const l = str.split(',');
-
-  for (const i in l) {
-    l[i] = l[i].replace(/^[\'\"]/, '');
-    l[i] = l[i].replace(/[\'\"]$/, '');
-  }
-
-  return l;
+  return str.split(',').map(
+    e => e.replace(/^[\'\"]/, '').replace(/[\'\"]$/, ''));
 }
 
 function unquote(str) {
   return str.replace(/^[\'\"]/, '').replace(/[\'\"]$/, '');
 }
 
-var orderedConstraints = [];
-var constraints = {};
+const orderedConstraints = [];
+const constraints = {};
 
-var RootConstraint = {
+const RootConstraint = {
   ddl_statement() {
-    return this.name;
-  },
-  toJSON() {
-    return {
-      name: this.name
-    };
-  },
-  toString() {
-    return this.ddl_statement();
-  }
+      return this.name;
+    },
+    toJSON() {
+      return {
+        name: this.name
+      };
+    },
+    toString() {
+      return this.ddl_statement();
+    }
 };
 
 function parse_constraints(ps, cs) {
   let gotSomething;
-
   let str = ps.input;
 
   if (str) {
@@ -80,7 +73,6 @@ function parse_constraints(ps, cs) {
 
       for (const i in orderedConstraints) {
         const oc = orderedConstraints[i];
-
         const m = str.match(oc.regex);
 
         //winston.log(str + " <> " + oc.regex + " ::: "  + m);
@@ -254,23 +246,23 @@ const Constraint = function (type, properties) {
 
 const RootAttribute = {
   ddl_statement() {
-    const c = [this.name, this.type];
-    for (var i in this.constraints)
-      c.push(this.constraints[i].ddl_statement());
+      const c = [this.name, this.type];
+      for (const i in this.constraints)
+        c.push(this.constraints[i].ddl_statement());
 
-    return c.join(' ');
-  },
-  toJSON() {
-    const o = {
-      name: this.name,
-      type: this.type
-    };
-    if (this.constraints.length > 0) o.constraints = this.constraints;
-    return o;
-  },
-  toString: function () {
-    return this.ddl_statement();
-  }
+      return c.join(' ');
+    },
+    toJSON() {
+      const o = {
+        name: this.name,
+        type: this.type
+      };
+      if (this.constraints.length > 0) o.constraints = this.constraints;
+      return o;
+    },
+    toString() {
+      return this.ddl_statement();
+    }
 };
 
 /**
@@ -307,92 +299,88 @@ const Attribute = function (name, type, cs) {
 
 const RootTable = {
   ddl_statement() {
-    const atts = [];
+      const atts = this.attributes.map(a => a.ddl_statement());
 
-    for (const i in this.attributes) {
-      atts.push(this.attributes[i].ddl_statement());
-    }
-
-    for (const i in this.constraints) {
-      atts.push(this.constraints[i].ddl_statement());
-    }
-
-    return 'CREATE TABLE ' + this.name + '(' + atts.join(',') + ')';
-  },
-  toJSON() {
-    const o = {
-      attributes: this.attributes
-    };
-    if (this.constraints && this.constraints.length > 0) o.constraints = this.constraints;
-    return o;
-  },
-  toString() {
-    return this.ddl_statement();
-  },
-  attribute_names() {
-    const names = [];
-    for (const i in this.attributes) names.push(this.attributes[i].name);
-    return names;
-  },
-  insert_sql(attributes) {
-    const qm = [];
-
-    for (const k in attributes) qm.push('?');
-
-    return 'INSERT INTO ' + this.name + '(' + attributes.join(',') + ') VALUES(' + qm.join(',') + ')';
-  },
-  update_sql(attributes) {
-    const j = this.pk().length;
-    const a = [];
-    for (const i in attributes) {
-      if (i >= j)
-        a.push(attributes[i] + '=?');
-    }
-
-    if (a.length === 0) return undefined;
-    return 'UPDATE ' + this.name + ' SET ' + a.join(',') + ' WHERE ' + this.pk_predicate();
-  },
-  attribute(name) {
-    for (const i in this.attributes) {
-      const a = this.attributes[i];
-      if (a.name === name) return a;
-    }
-    return undefined;
-  },
-  pk() {
-    const pk = [];
-
-    for (const i in this.attributes) {
-      var a = this.attributes[i];
-      for (const j in a.constraints) {
-        const c = a.constraints[j];
-        if (c.name.search(/PRIMARY KEY/) >= 0) pk.push(a);
+      for (const i in this.constraints) {
+        atts.push(this.constraints[i].ddl_statement());
       }
-    }
 
-    for (const i in this.constraints) {
-      const c = this.constraints[i];
+      return 'CREATE TABLE ' + this.name + '(' + atts.join(',') + ')';
+    },
+    toJSON() {
+      const o = {
+        attributes: this.attributes
+      };
+      if (this.constraints && this.constraints.length > 0) o.constraints = this.constraints;
+      return o;
+    },
+    toString() {
+      return this.ddl_statement();
+    },
+    attribute_names() {
+      const names = [];
+      for (const i in this.attributes) names.push(this.attributes[i].name);
+      return names;
+    },
+    insert_sql(attributes) {
+      const qm = [];
 
-      if (c.name.search(/PRIMARY KEY/) >= 0) {
-        for (const j in c.attributes) pk.push(this.attribute(c.attributes[j]));
+      for (const k in attributes) qm.push('?');
+
+      return 'INSERT INTO ' + this.name + '(' + attributes.join(',') + ') VALUES(' + qm.join(',') + ')';
+    },
+    update_sql(attributes) {
+      const j = this.pk().length;
+      const a = [];
+      for (const i in attributes) {
+        if (i >= j)
+          a.push(attributes[i] + '=?');
       }
+
+      if (a.length === 0) return undefined;
+      return 'UPDATE ' + this.name + ' SET ' + a.join(',') + ' WHERE ' + this.pk_predicate();
+    },
+    attribute(name) {
+      for (const i in this.attributes) {
+        const a = this.attributes[i];
+        if (a.name === name) return a;
+      }
+      return undefined;
+    },
+    pk() {
+      const pk = [];
+
+      for (const i in this.attributes) {
+        var a = this.attributes[i];
+        for (const j in a.constraints) {
+          const c = a.constraints[j];
+          if (c.name.search(/PRIMARY KEY/) >= 0) pk.push(a);
+        }
+      }
+
+      for (const i in this.constraints) {
+        const c = this.constraints[i];
+
+        if (c.name.search(/PRIMARY KEY/) >= 0) {
+          for (const j in c.attributes) pk.push(this.attribute(c.attributes[j]));
+        }
+      }
+
+      return pk;
+    },
+    pk_predicate(alias, values) {
+      const ps = [];
+      const pk = this.pk();
+
+      for (const i in pk) {
+        ps.push((alias ? [alias, pk[i].name].join('.') : pk[i].name) + '=?');
+      }
+
+      return ps.join(' AND ');
+    },
+    next_pk(db, callback) {
+      db.get('SELECT MAX(' + this.pk()[0].name + ') + 1 FROM ' + this.name, callback);
     }
-
-    return pk;
-  },
-  pk_predicate(alias, values) {
-    const ps = [];
-    const pk = this.pk();
-
-    for (const i in pk) {
-      ps.push((alias ? [alias, pk[i].name].join('.') : pk[i].name) + '=?');
-    }
-
-    return ps.join(' AND ');
-  },
-  next_pk(db, callback) {
-    db.get('SELECT MAX(' + this.pk()[0].name + ') + 1 FROM ' + this.name, callback);
-  }
 };
 
 /**
@@ -452,7 +440,8 @@ function tables_from_db(db, callback) {
           if (parse_constraints(ps, constraints)) {
             //console.log("after constra A: " + ps.input);
           } else {
-            const m = ps.input.match(/^\s*((\"[^\"]+\")|([a-z][a-z_0-9]*))\s+([a-z][a-z0-9_]*(\([^\)]+\))?)[\s,]+(.*)/i);
+            const m = ps.input.match(
+              /^\s*((\"[^\"]+\")|([a-z][a-z_0-9]*))\s+([a-z][a-z0-9_]*(\([^\)]+\))?)[\s,]+(.*)/i);
             if (m) {
               const aname = unquote(m[1]);
               const type = m[4];
@@ -461,8 +450,9 @@ function tables_from_db(db, callback) {
               const cs = [];
               parse_constraints(ps, cs);
 
-              if (m = ps.input.match(/^\s*,\s*(.*)/)) {
-                ps.input = m[1];
+              const m2 = ps.input.match(/^\s*,\s*(.*)/);
+              if (m2) {
+                ps.input = m2[1];
               }
 
               attributes.push(Attribute(aname, type, cs));
@@ -487,7 +477,7 @@ function tables_from_db(db, callback) {
 }
 
 const RootSchema = Object.create({
-  'migrations': {},
+  migrations: {},
   load(cb) {
     fs.readFile(this.schema_json_file, (error, data) => {
       if (error) {
@@ -499,7 +489,8 @@ const RootSchema = Object.create({
     });
   },
   save(callback) {
-    mkdirp(t.basedir, '0755', error => fs.writeFile(this.schema_json_file, JSON.stringify(t, undefined, '\t'), callback));
+    mkdirp(t.basedir, '0755', error => fs.writeFile(this.schema_json_file, JSON.stringify(t, undefined, '\t'),
+      callback));
   },
   load_from_object(object) {
     const tables = {};
@@ -540,7 +531,7 @@ const RootSchema = Object.create({
       callback(error, this);
     });
   },
-  'toJSON'() {
+  toJSON() {
     return {
       versions: this.versions,
       migrations: this.migrations,
@@ -548,7 +539,7 @@ const RootSchema = Object.create({
     };
   },
 
-  'exec_ddl'(db, createOptions, callback) {
+  exec_ddl(db, createOptions, callback) {
 
     if (!createOptions)
       createOptions = {
@@ -567,7 +558,7 @@ const RootSchema = Object.create({
     const basedir = this.basedir;
     const schema = this;
 
-    tables_from_db(db,  (error, present_tables) => {
+    tables_from_db(db, (error, present_tables) => {
       if (error) {
         callback(error);
         return;
@@ -635,17 +626,15 @@ const RootSchema = Object.create({
         }
 		*/
 
-      async.map(pre_steps,
-        (sql, cb) => db.run(sql, cb),
-         error => {
+      async.map(pre_steps, (sql, cb) => db.run(sql, cb),
+        error => {
           if (error) {
             callback(error, this);
             return;
           }
 
-          async.map(steps.concat(post_steps),
-             (sql, cb) => db.run(sql, cb),
-             error => {
+          async.map(steps.concat(post_steps), (sql, cb) => db.run(sql, cb),
+            error => {
               if (error) {
                 callback(error, this);
                 return;
@@ -665,7 +654,7 @@ const RootSchema = Object.create({
         });
     });
   },
-  'migrate_data'(db, data_sets, callback) {
+  migrate_data(db, data_sets, callback) {
     const update = function (table, sql, values) {
       const v = [];
       const l = table.pk().length;
@@ -704,12 +693,12 @@ const RootSchema = Object.create({
     callback(undefined, this, db);
   }
 }, {
-  'schema_json_file': {
+  schema_json_file: {
     get: function () {
       return path.join(this.basedir, 'schema.json');
     }
   },
-  'schemaHash': {
+  schemaHash: {
     get: function () {
       var hash = crypto.createHash('sha1');
       for (var j in this.tables) {
@@ -717,7 +706,7 @@ const RootSchema = Object.create({
       }
       return hash.digest('hex');
     },
-    'tables': {
+    tables: {
       value: {},
       writeable: true,
       enumerable: true,
@@ -733,11 +722,11 @@ const RootSchema = Object.create({
  * @this {Schema}
  * @param {options} string value holding schmema fs directory.
  */
-var Schema = function (options, callback) {
+const Schema = function (options, callback) {
 
   if (typeof options === 'string') {
     const schema = RootSchema.spawn({
-      'basedir': options
+      basedir: options
     });
     schema.load(callback);
     return schema;

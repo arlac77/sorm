@@ -1,7 +1,7 @@
 {
   "name": "sorm",
   "description": "Simple Object Relational Mapper with Node JS",
-  "version": "0.2.1",
+  "version": "0.0.0-semantic-release",
   "keywords": [
     "sqlite3",
     "schema",
