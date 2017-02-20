@@ -2,7 +2,7 @@
 
 'use strict';
 
-var crypto = require('crypto'),
+const crypto = require('crypto'),
   fs = require('fs'),
   path = require('path'),
   mkdirp = require('mkdirp'),
@@ -129,10 +129,7 @@ create_constraint({
     const properties = {};
     if (matches[2]) properties.options = matches[2];
     if (matches[3]) {
-      properties.attributes = matches[4].split(/,/);
-      for (var i in properties.attributes) {
-        properties.attributes[i] = unquote(properties.attributes[i]);
-      }
+      properties.attributes = matches[4].split(/,/).map(a => unquote(a));
     }
     cs.push(Constraint(constraint, properties));
     return matches[5];
@@ -351,7 +348,7 @@ const RootTable = {
       const pk = [];
 
       for (const i in this.attributes) {
-        var a = this.attributes[i];
+        const a = this.attributes[i];
         for (const j in a.constraints) {
           const c = a.constraints[j];
           if (c.name.search(/PRIMARY KEY/) >= 0) pk.push(a);
@@ -641,7 +638,7 @@ const RootSchema = Object.create({
               }
 
               if (createOptions.load_data) {
-                var djs = path.join(basedir, 'data.json');
+                const djs = path.join(basedir, 'data.json');
                 fs.stat(djs, (error, stats) => {
                   if (error) return;
                   schema.migrate_data(db, JSON.parse(fs.readFileSync(djs)), callback);
@@ -700,8 +697,8 @@ const RootSchema = Object.create({
   },
   schemaHash: {
     get: function () {
-      var hash = crypto.createHash('sha1');
-      for (var j in this.tables) {
+      const hash = crypto.createHash('sha1');
+      for (const j in this.tables) {
         hash.update(this.tables[j].ddl_statement());
       }
       return hash.digest('hex');
