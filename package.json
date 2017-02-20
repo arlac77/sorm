@@ -10,10 +10,10 @@
   "engines": {
     "node": ">=6.9"
   },
-  "author": {
+  "contributors": [{
     "name": "Markus Felten",
-    "email": "Markus.Felten@gmx.de"
-  },
+    "email": "markus.felten@gmx.de"
+  }],
   "license": "BSD-2-Clause",
   "dependencies": {
     "async": ">=2.1.5",
@@ -55,12 +55,12 @@
     "url": "git@github.com:arlac77/sorm.git"
   },
   "nyc": {
-  "include": [
-    "dist/**/*.js"
-  ],
-  "reporter": [
-    "lcov"
-  ],
-  "report-dir": "./coverage"
-}
+    "include": [
+      "dist/**/*.js"
+    ],
+    "reporter": [
+      "lcov"
+    ],
+    "report-dir": "./coverage"
+  }
 }
