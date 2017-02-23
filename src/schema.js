@@ -9,6 +9,8 @@ const crypto = require('crypto'),
   async = require('async'),
   winston = require('winston');
 
+  //import Table from './Table';
+  import { quote, quoteIfNeeded, unquoteList, unquote } from './util';
 
 Object.defineProperty(Object.prototype, 'spawn', {
   value: function (props) {
@@ -24,26 +26,6 @@ Object.defineProperty(Object.prototype, 'spawn', {
     return Object.create(this, defs);
   }
 });
-
-function quote(str) {
-  return `"${str}"`;
-}
-
-function optional_quote(str) {
-  if (str.match(/^[a-z_][a-z0-9_]*$/i))
-    return str;
-  else
-    return `"${str}"`;
-}
-
-function unquote_list(str) {
-  return str.split(',').map(
-    e => e.replace(/^[\'\"]/, '').replace(/[\'\"]$/, ''));
-}
-
-function unquote(str) {
-  return str.replace(/^[\'\"]/, '').replace(/[\'\"]$/, '');
-}
 
 const orderedConstraints = [];
 const constraints = {};
@@ -184,16 +166,16 @@ create_constraint({
     };
   },
   ddl_statement() {
-    return 'CONSTRAINT ' + optional_quote(this.id) +
+    return 'CONSTRAINT ' + quoteIfNeeded(this.id) +
       ' FOREIGN KEY(' + this.attributes.join(',') + ') REFERENCES ' +
-      optional_quote(this.foreign_table) + '(' + this.foreign_attributes.join(',') + ')';
+      quoteIfNeeded(this.foreign_table) + '(' + this.foreign_attributes.join(',') + ')';
   },
   parse(matches, cs, constraint) {
     cs.push(Constraint(constraint, {
       id: unquote(matches[1]),
-      attributes: unquote_list(matches[5]),
+      attributes: unquoteList(matches[5]),
       foreign_table: unquote(matches[6]),
-      foreign_attributes: unquote_list(matches[10])
+      foreign_attributes: unquoteList(matches[10])
     }));
     return matches[11];
   }
