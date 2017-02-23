@@ -5,7 +5,7 @@ const vows = require('vows'),
   sqlite3 = require('sqlite3'),
   {
     Schema
-  } = require('../dist/schema');
+  } = require('../dist/module');
 
 vows.describe('Schema From File').addBatch({
   'Schema Values': {

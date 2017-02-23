@@ -5,7 +5,7 @@ const vows = require('vows'),
   sqlite3 = require('sqlite3'),
   {
     Attribute, Table
-  } = require('../dist/schema');
+  } = require('../dist/module');
 
 vows.describe('Tables').addBatch({
   'Table Values': {

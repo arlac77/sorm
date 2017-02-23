@@ -5,7 +5,7 @@ const vows = require('vows'),
   sqlite3 = require('sqlite3'),
   {
     Attribute, Constraint
-  } = require('../dist/schema');
+  } = require('../dist/module');
 
 vows.describe('Attribute').addBatch({
   'Attribute Values': {

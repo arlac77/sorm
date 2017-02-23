@@ -37,8 +37,8 @@
     "rollup": "^0.41.4",
     "semantic-release": "^6.3.6"
   },
-  "module": "src/schema.js",
-  "main": "dist/schema.js",
+  "module": "src/module.js",
+  "main": "dist/module.js",
   "bin": {
     "sorm": "bin/sorm"
   },
@@ -47,7 +47,7 @@
     "test": "vows tests/*.js --isolate --spec",
     "docs": "jsdoc2md -l off -t doc/README.hbs -f src/*.js >README.md",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "prepublish": "rollup --output=dist/schema.js -c -- src/schema.js",
+    "prepublish": "rollup --output=dist/module.js -c -- src/module.js",
     "pretest": "npm run prepublish",
     "posttest": "markdown-doctest",
     "precover": "npm run prepublish"

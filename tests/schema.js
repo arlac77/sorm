@@ -7,7 +7,7 @@ const vows = require('vows'),
   sqlite3 = require('sqlite3'),
   {
     Schema
-  } = require('../dist/schema');
+  } = require('../dist/module');
 
 
 const testdir = path.join('/tmp', 'vows' + process.pid);
