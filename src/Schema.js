@@ -8,37 +8,70 @@ const crypto = require('crypto'),
   mkdirp = require('mkdirp'),
   async = require('async');
 
-  //import Table from './Table';
-  import { quote, quoteIfNeeded, unquoteList, unquote } from './util';
+import Table from './Table';
 
+import {
+  quote, quoteIfNeeded, unquoteList, unquote
+}
+from './util';
 
 
 export class Schema {
-  constructor()
-  {
-    const tables = [];
-    Object.defineProperty(this, 'tables', { value: tables });
+  constructor() {
+    Object.defineProperty(this, 'tables', {
+      value: new Map()
+    });
   }
 
-  save() {
-    return new Promise((fullfill,reject) => {
+  async save() {
+    return new Promise((fullfill, reject) => {
       mkdirp(t.basedir, '0755', error => fs.writeFile(this.schema_json_file, JSON.stringify(t, undefined, '\t'),
         callback));
     });
   }
-  
+
   load(object) {
     const tables = {};
 
     for (const i in object.tables) {
       const t = object.tables[i];
-      tables[i] = new Table(i, t.attributes, t.constraints);
+      this.tables.put(i, new Table(i, t.attributes, t.constraints));
     }
+  }
 
-    for (const j in object) {
-      this[j] = object[j];
+  get ddlHash() {
+    const hash = crypto.createHash('sha1');
+    this.tables.forEach(t => hash.update(t.ddl));
+    return hash.digest('hex');
+  }
+
+  toJSON() {
+    return {
+      tables: this.tables
+    };
+  }
+}
+
+async load(file) {
+  return new Promise((fullfill, reject) => {
+    fs.readFile(file, (error, data) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      this.load_from_object(JSON.parse(data));
+      fullfill(this);
+    });
+  });
+}
+
+
+load_ddl_from_db(db, callback) {
+  tables_from_db(db, (error, tables) => {
+    if (error) {
+      callback(error);
+      return;
     }
-
     this.tables = tables;
 
     if (!this.versions) {
@@ -47,55 +80,12 @@ export class Schema {
         tag: 1
       };
     }
-  }
 
-  get ddlHash() {
-    const hash = crypto.createHash('sha1');
-    this.tables.forEach(t => hash.update(t.ddl));
-    return hash.digest('hex');
-    }
-
-  toJSON() {
-    return {
-      versions: this.versions,
-      migrations: this.migrations,
-      tables: this.tables
-    };
-  }
+    callback(error, this);
+  });
 }
 
-  load(cb) {
-    fs.readFile(this.schema_json_file, (error, data) => {
-      if (error) {
-        if (cb) cb(error);
-        return;
-      }
-      this.load_from_object(JSON.parse(data));
-      if (cb) cb(undefined, this);
-    });
-  }
-
-
-  load_ddl_from_db(db, callback) {
-    tables_from_db(db, (error, tables) => {
-      if (error) {
-        callback(error);
-        return;
-      }
-      this.tables = tables;
-
-      if (!this.versions) {
-        this.versions = {};
-        this.versions[this.schemaHash] = {
-          tag: 1
-        };
-      }
-
-      callback(error, this);
-    });
-  }
-
-  exec_ddl(db, createOptions, callback) {
+exec_ddl(db, createOptions, callback) {
 
     if (!createOptions)
       createOptions = {
@@ -251,11 +241,11 @@ export class Schema {
       return path.join(this.basedir, 'schema.json');
     }
   },
-    tables: {
-      value: {},
-      writeable: true,
-      enumerable: true,
-      configurable: true
-    }
+  tables: {
+    value: {},
+    writeable: true,
+    enumerable: true,
+    configurable: true
   }
+}
 });
