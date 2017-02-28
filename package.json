@@ -38,8 +38,8 @@
     "sorm": "bin/sorm"
   },
   "scripts": {
-    "cover": "nyc npm test",
-    "test": "ava tests/*_test.js",
+    "cover": "nyc ava",
+    "test": "ava",
     "docs": "jsdoc2md -l off -t doc/README.hbs -f src/*.js >README.md",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "prepublish": "rollup --output=dist/module.js -c -- src/module.js",
@@ -50,6 +50,19 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:arlac77/sorm.git"
+  },
+  "babel": {
+    "presets": [
+      "es2017",
+      "stage-0"
+    ]
+  },
+  "ava": {
+    "files": [
+      "tests/*_test.js"
+    ],
+    "require": ["babel-core/register"],
+    "babel": "inherit"
   },
   "nyc": {
     "include": [
