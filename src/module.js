@@ -9,70 +9,12 @@ const crypto = require('crypto'),
   async = require('async'),
   winston = require('winston');
 
-  //import Table from './Table';
-  import { quote, quoteIfNeeded, unquoteList, unquote } from './util';
-
-function tables_from_db(db, callback) {
-  db.all("SELECT name,sql FROM sqlite_master WHERE type='table'", (error, rows) => {
-    if (error) {
-      callback(error);
-      return;
-    }
-
-    let tables = {};
-    for (const i in rows) {
-      const row = rows[i];
-      const sql = row.sql.split(/\n/).join(' ');
-      //console.log("input          : " + sql);
-
-      const m = sql.match(/CREATE\s+TABLE\s+((\"([^\"]+)\")|([a-z][a-z0-9_]*))\s*\((.*)/im);
-      if (m) {
-        const attributes = [];
-        const constraints = [];
-        const name = m[3] ? m[3] : m[4];
-        const ps = {
-          input: m[5]
-        };
-
-        do {
-          if (parse_constraints(ps, constraints)) {
-            //console.log("after constra A: " + ps.input);
-          } else {
-            const m = ps.input.match(
-              /^\s*((\"[^\"]+\")|([a-z][a-z_0-9]*))\s+([a-z][a-z0-9_]*(\([^\)]+\))?)[\s,]+(.*)/i);
-            if (m) {
-              const aname = unquote(m[1]);
-              const type = m[4];
-              ps.input = m[6];
-
-              const cs = [];
-              parse_constraints(ps, cs);
-
-              const m2 = ps.input.match(/^\s*,\s*(.*)/);
-              if (m2) {
-                ps.input = m2[1];
-              }
-
-              attributes.push(Attribute(aname, type, cs));
-            } else if (ps.input === ')') {
-              break;
-            } else {
-              winston.error('Unknown table ddl content', {
-                input: ps.input
-              });
-              break;
-            }
-          }
-        }
-        while (ps.input.length > 0);
-
-        tables[name] = Table(name, attributes, constraints);
-      }
-    }
-
-    callback(null, tables);
-  });
+//import Table from './Table';
+import {
+  quote, quoteIfNeeded, unquoteList, unquote
 }
+from './util';
+
 
 const RootSchema = Object.create({
   migrations: {},
