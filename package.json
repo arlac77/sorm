@@ -16,15 +16,13 @@
   }],
   "license": "BSD-2-Clause",
   "dependencies": {
-    "async": ">=2.1.5",
     "sqlite3": ">=2.1",
     "pkginfo": ">=0.2.3",
     "mkdirp": ">=0.3.1",
     "commander": ">=1"
   },
   "devDependencies": {
-    "vows": ">=0.8.1",
-    "chai": "^3.5.0",
+    "ava": "^0.18.2",
     "cz-conventional-changelog": "^2.0.0",
     "jsdoc-to-markdown": "^3.0.0",
     "markdown-doctest": "^0.9.1",
@@ -41,7 +39,7 @@
   },
   "scripts": {
     "cover": "nyc npm test",
-    "test": "vows tests/*.js --isolate --spec",
+    "test": "ava tests/*_test.js",
     "docs": "jsdoc2md -l off -t doc/README.hbs -f src/*.js >README.md",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "prepublish": "rollup --output=dist/module.js -c -- src/module.js",
