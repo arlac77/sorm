@@ -7,8 +7,7 @@ test('foo', t => {
     t.pass();
 });
 
-test('bar', async t => {
-    const bar = Promise.resolve('bar');
-
-    t.is(await bar, 'bar');
+test('tables', async t => {
+    const tables = await tablesFromDatabase();
+    t.is(tables.get('t1').name, 't1' );
 });

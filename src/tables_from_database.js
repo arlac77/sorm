@@ -6,6 +6,8 @@ export function tablesFromDatabase(db) {
   return new Promise((fullfill, reject) => {
     const tables = new Map();
 
+    tables.set('t1',{ name: 't1'});
+
 /*
     db.all("SELECT name,sql FROM sqlite_master WHERE type='table'", (error, rows) => {
       if (error) {
@@ -60,5 +62,4 @@ export function tablesFromDatabase(db) {
 */
       fullfill(tables);
     });
-
 }
