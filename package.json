@@ -10,10 +10,12 @@
   "engines": {
     "node": ">=6.9.4"
   },
-  "contributors": [{
-    "name": "Markus Felten",
-    "email": "markus.felten@gmx.de"
-  }],
+  "contributors": [
+    {
+      "name": "Markus Felten",
+      "email": "markus.felten@gmx.de"
+    }
+  ],
   "license": "BSD-2-Clause",
   "dependencies": {
     "sqlite3": ">=2.1",
@@ -23,11 +25,14 @@
   },
   "devDependencies": {
     "ava": "^0.18.2",
+    "babel-preset-es2015-rollup": "^3.0.0",
     "cz-conventional-changelog": "^2.0.0",
     "jsdoc-to-markdown": "^3.0.0",
     "markdown-doctest": "^0.9.1",
     "nyc": "^10.1.2",
     "rollup": "^0.41.4",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-multi-entry": "^2.0.1",
     "semantic-release": "^6.3.6"
   },
   "module": "src/module.js",
@@ -41,7 +46,7 @@
     "docs": "jsdoc2md -l off -t doc/README.hbs -f src/*.js >README.md",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "prepublish": "rollup --output=dist/module.js -c -- src/module.js",
-    "pretest": "npm run prepublish",
+    "pretest": "rollup -c rollup.config.test.js",
     "posttest": "markdown-doctest",
     "precover": "npm run prepublish"
   },
@@ -49,18 +54,13 @@
     "type": "git",
     "url": "git@github.com:arlac77/sorm.git"
   },
-  "babel": {
-    "presets": [
-      "es2017",
-      "stage-0"
-    ]
-  },
   "ava": {
     "files": [
-      "tests/*_test.js"
+      "tests/test-bundle.js"
     ],
-    "require": ["babel-core/register"],
-    "babel": "inherit"
+    "require": [
+      "babel-register"
+    ]
   },
   "nyc": {
     "include": [
