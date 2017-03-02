@@ -3,12 +3,17 @@
 'use strict';
 
 
-export class Attribute {
-  constructor(name, type, constraints)
-  {
-    Object.defineProperty(this, 'name', { value: name });
-    Object.defineProperty(this, 'type', { value: type });
-    Object.defineProperty(this, 'constraints', { value: constraints });
+export default class Attribute {
+  constructor(name, type, constraints) {
+    Object.defineProperty(this, 'name', {
+      value: name
+    });
+    Object.defineProperty(this, 'type', {
+      value: type
+    });
+    Object.defineProperty(this, 'constraints', {
+      value: constraints
+    });
   }
 
   get ddl() {

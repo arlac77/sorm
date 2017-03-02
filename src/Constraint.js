@@ -3,6 +3,29 @@
 'use strict';
 
 
+export default class Constraint {
+  constructor(name, attributes, constraints) {
+    Object.defineProperty(this, 'name', {
+      value: name
+    });
+  }
+
+  get ddl() {
+    return this.name;
+  }
+
+  toJSON() {
+    return {
+      name: this.name
+    };
+  }
+
+  toString() {
+    return this.ddl;
+  }
+}
+
+
 const orderedConstraints = [];
 const constraints = {};
 
@@ -50,67 +73,43 @@ function parse_constraints(ps, cs) {
  * @param {options} either a string or a object with name and attributes.
  */
 
-function makeContraint(type,properties) {
-if (typeof type === 'string') {
-  let c = constraints[type.toUpperCase()];
-  if (c) {
+function makeContraint(type, properties) {
+  if (typeof type === 'string') {
+    let c = constraints[type.toUpperCase()];
+    if (c) {
+      return c;
+    }
+
+    const cs = [];
+
+    parse_constraints({
+      input: type
+    }, cs);
+
+    c = cs[0];
+
+    if (!c) {
+      return undefined;
+    }
     return c;
-  }
+  } else if (properties === undefined) {
+    properties = {};
+    for (const key in type) {
+      if (key !== 'name')
+        properties[key] = type[key];
+    }
 
-  const cs = [];
-
-  parse_constraints({
-    input: type
-  }, cs);
-
-  c = cs[0];
-
-  if (!c) {
-    winston.warn('Unknown constraint', type);
-    return undefined;
-  }
-  return c;
-} else if (properties === undefined) {
-  properties = {};
-  for (const key in type) {
-    if (key !== 'name')
-      properties[key] = type[key];
-  }
-
-  type = constraints[type.name.toUpperCase()];
-}
-}
-
-export class Constraint {
-  constructor(name,attributes,constraints)
-  {
-    Object.defineProperty(this, 'name', { value: name });
-
-  }
-
-  get ddl() {
-    return this.name;
-  }
-
-  toJSON() {
-    return {
-      name: this.name
-    };
-  }
-
-  toString() {
-    return this.ddl;
+    type = constraints[type.name.toUpperCase()];
   }
 }
 
 
-function create_constraint(definition) {
-  const c = RootConstraint.spawn(definition);
-  orderedConstraints.push(c);
-  constraints[c.name] = c;
+function createConstraint(definition) {
+  //  orderedConstraints.push(c);
+  //  constraints[c.name] = c;
 }
 
-create_constraint({
+createConstraint({
   name: 'PRIMARY KEY',
   regex: /^primary\s+key(\s+(asc|desc))?\s*(\(([^/)]+)\))?(.*)/im,
   toJSON() {
@@ -142,17 +141,17 @@ create_constraint({
   }
 });
 
-create_constraint({
+createConstraint({
   name: 'NOT NULL',
   regex: /^not\s+null\s*(.*)/im
 });
 
-create_constraint({
+createConstraint({
   name: 'NULL',
   regex: /^null\s*(.*)/im
 });
 
-create_constraint({
+createConstraint({
   name: 'DEFAULT',
   regex: /^default\s+(('[^']*')|("[^"]*")|(\d+)|(null))(.*)/im,
   toJSON() {
@@ -177,7 +176,7 @@ create_constraint({
   }
 });
 
-create_constraint({
+createConstraint({
   name: 'FOREIGN KEY',
   regex: /^CONSTRAINT\s+((\'[^\']+\')|(\"[^\"]+\")|([a-z][a-z_0-9]*))\s+FOREIGN\s+KEY\s*\(([^\)]+)\)\s*REFERENCES\s*((\'[^\']+\')|(\"[^\"]+\")|([a-z][a-z_0-9]*))\s*\(([^\)]+)\)(.*)/im,
   toJSON() {

@@ -6,23 +6,12 @@
 import Attribute from './Attribute';
 import Constraint from './Constraint';
 
-export class Table {
-  constructor(name, attributes, constraints) {
+
+export default class Table {
+  constructor(name, attributes = [], constraints = []) {
     Object.defineProperty(this, 'name', {
       value: name
     });
-
-    for (const i in attributes) {
-      const a = attributes[i];
-      if (!(a instanceof Attribute))
-        attributes[i] = Attribute(a.name, a.type, a.constraints);
-    }
-
-    for (const i in constraints) {
-      const c = constraints[i];
-      if (!(c instanceof Constraint))
-        constraints[i] = Constraint(c);
-    }
 
     Object.defineProperty(this, 'attributes', {
       value: attributes
@@ -50,11 +39,6 @@ export class Table {
     return this.ddl;
   }
 
-  attribute_names() {
-    const names = [];
-    for (const i in this.attributes) names.push(this.attributes[i].name);
-    return names;
-  }
 
   insert(attributes) {
     const qm = [];
@@ -74,6 +58,10 @@ export class Table {
 
     if (a.length === 0) return undefined;
     return 'UPDATE ' + this.name + ' SET ' + a.join(',') + ' WHERE ' + this.pk_predicate();
+  }
+
+  get attributeNames() {
+    return this.attributes.map(a => a.name);
   }
 
   attribute(name) {
