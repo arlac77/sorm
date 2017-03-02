@@ -10,12 +10,10 @@
   "engines": {
     "node": ">=6.9.4"
   },
-  "contributors": [
-    {
-      "name": "Markus Felten",
-      "email": "markus.felten@gmx.de"
-    }
-  ],
+  "contributors": [{
+    "name": "Markus Felten",
+    "email": "markus.felten@gmx.de"
+  }],
   "license": "BSD-2-Clause",
   "dependencies": {
     "sqlite3": ">=2.1",
@@ -56,7 +54,7 @@
   },
   "ava": {
     "files": [
-      "tests/test-bundle.js"
+      "build/test-bundle.js"
     ],
     "require": [
       "babel-register"
