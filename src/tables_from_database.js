@@ -2,6 +2,13 @@
 
 'use strict';
 
+import Table from './Table';
+import Attribute from './Attribute';
+import {
+  unquote
+}
+from './util';
+
 export function tablesFromDatabase(db) {
   return new Promise((fullfill, reject) => {
     const tables = new Map();
@@ -13,31 +20,33 @@ export function tablesFromDatabase(db) {
       }
 
       rows.forEach(row => {
-        tables.set(row.name, {
-          name: row.name,
-          sql: row.sql
-        });
+        const sql = row.sql.split(/\n/).join(' ');
+        const m = sql.match(/CREATE\s+TABLE\s+((\"([^\"]+)\")|([a-z][a-z0-9_]*))\s*\((.*)/im);
+        if (m) {
+          const constraints = [];
+          const name = m[3] ? m[3] : m[4];
+          const ps = {
+            input: m[5]
+          };
+
+          const attributes = [];
+
+          const m2 = ps.input.match(
+            /^\s*((\"[^\"]+\")|([a-z][a-z_0-9]*))\s+([a-z][a-z0-9_]*(\([^\)]+\))?)[\s,]+(.*)/i);
+          if (m2) {
+            const aname = unquote(m2[1]);
+            //console.log(aname);
+            attributes.push(new Attribute(aname));
+          }
+
+          tables.set(name, new Table(name, attributes));
+        }
       });
 
       fullfill(tables);
     });
 
     /*
-        db.all("SELECT name,sql FROM sqlite_master WHERE type='table'", (error, rows) => {
-
-          for (const i in rows) {
-            const row = rows[i];
-            const sql = row.sql.split(/\n/).join(' ');
-
-            const m = sql.match(/CREATE\s+TABLE\s+((\"([^\"]+)\")|([a-z][a-z0-9_]*))\s*\((.*)/im);
-            if (m) {
-              const attributes = [];
-              const constraints = [];
-              const name = m[3] ? m[3] : m[4];
-              const ps = {
-                input: m[5]
-              };
-
               do {
                 if (parse_constraints(ps, constraints)) {
                 } else {
