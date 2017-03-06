@@ -31,13 +31,24 @@ export function tablesFromDatabase(db) {
 
           const attributes = [];
 
-          const m2 = ps.input.match(
+          do {
+          const ma = ps.input.match(
             /^\s*((\"[^\"]+\")|([a-z][a-z_0-9]*))\s+([a-z][a-z0-9_]*(\([^\)]+\))?)[\s,]+(.*)/i);
-          if (m2) {
-            const aname = unquote(m2[1]);
-            //console.log(aname);
-            attributes.push(new Attribute(aname));
-          }
+          if (ma) {
+            const aname = unquote(ma[1]);
+            const type = ma[4];
+            ps.input = ma[6];
+            const constraints = [];
+
+            attributes.push(new Attribute(aname, type, constraints));
+
+        } else if (ps.input === ')') {
+          break;
+        } else {
+          break;
+        }
+        }
+        while (ps.input.length > 0);
 
           tables.set(name, new Table(name, attributes));
         }
@@ -47,15 +58,11 @@ export function tablesFromDatabase(db) {
     });
 
     /*
-              do {
                 if (parse_constraints(ps, constraints)) {
                 } else {
                   const m = ps.input.match(
                     /^\s*((\"[^\"]+\")|([a-z][a-z_0-9]*))\s+([a-z][a-z0-9_]*(\([^\)]+\))?)[\s,]+(.*)/i);
                   if (m) {
-                    const aname = unquote(m[1]);
-                    const type = m[4];
-                    ps.input = m[6];
 
                     const cs = [];
                     parse_constraints(ps, cs);
@@ -64,16 +71,6 @@ export function tablesFromDatabase(db) {
                     if (m2) {
                       ps.input = m2[1];
                     }
-
-                    attributes.push(Attribute(aname, type, cs));
-                  } else if (ps.input === ')') {
-                    break;
-                  } else {
-                    break;
-                  }
-                }
-              }
-              while (ps.input.length > 0);
     */
   });
 }

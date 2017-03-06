@@ -20,4 +20,5 @@ test('tables', async t => {
 
   t.is(t1.name, 't1');
   t.is(t1.attributes[0].name, 'a1');
+  t.is(t1.attributes[0].type, 'char(16)');
 });

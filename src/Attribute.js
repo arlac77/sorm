@@ -32,23 +32,3 @@ export default class Attribute {
     return this.ddl;
   }
 }
-
-/*
-
-export function Attribute(name, type, cs) {
-
-  const constraints = [];
-
-  if (cs instanceof Array) {
-    for (const i in cs) {
-      const csi = cs[i];
-      constraints[i] = csi instanceof Constraint ? csi : Constraint(csi);
-    }
-  } else {
-    parse_constraints({
-      input: cs
-    }, constraints);
-  }
-}
-
-*/
