@@ -26,44 +26,7 @@ export default class Constraint {
 }
 
 
-const orderedConstraints = [];
 const constraints = {};
-
-function parse_constraints(ps, cs) {
-  let gotSomething;
-  let str = ps.input;
-
-  if (str) {
-    do {
-      gotSomething = false;
-      if (!str) break;
-
-      for (const i in orderedConstraints) {
-        const oc = orderedConstraints[i];
-        const m = str.match(oc.regex);
-
-        //winston.log(str + " <> " + oc.regex + " ::: "  + m);
-
-        if (m) {
-          gotSomething = true;
-          if (oc.parse) {
-            str = oc.parse(m, cs, oc);
-          } else {
-            str = m[1];
-            cs.push(Constraint(oc));
-          }
-
-          break;
-        }
-      }
-    }
-    while (gotSomething);
-  }
-
-  ps.input = str;
-
-  return gotSomething;
-}
 
 /**
  * Creates an instance of Constraint.
@@ -82,7 +45,7 @@ function makeContraint(type, properties) {
 
     const cs = [];
 
-    parse_constraints({
+    parseConstraints({
       input: type
     }, cs);
 
