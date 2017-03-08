@@ -169,9 +169,8 @@ createConstraint({
     };
   },
   ddl() {
-    return 'CONSTRAINT ' + quoteIfNeeded(this.id) +
-      ' FOREIGN KEY(' + this.attributes.join(',') + ') REFERENCES ' +
-      quoteIfNeeded(this.foreign_table) + '(' + this.foreign_attributes.join(',') + ')';
+    return
+      `CONSTRAINT ${quoteIfNeeded(this.id)} FOREIGN KEY(${this.attributes.join(',')}) REFERENCES ${quoteIfNeeded(this.foreign_table)}(${this.foreign_attributes.join(',')})`;
   },
   parse(matches, cs, constraint) {
     cs.push(Constraint(constraint, {

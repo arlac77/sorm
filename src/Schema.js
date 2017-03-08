@@ -30,23 +30,9 @@ export class Schema {
     );
   }
 
-  loadFromDatabase(db) {
-    tables_from_db(db, (error, tables) => {
-      if (error) {
-        callback(error);
-        return;
-      }
-      this.tables = tables;
+  async loadFromDatabase(db) {
 
-      if (!this.versions) {
-        this.versions = {};
-        this.versions[this.schemaHash] = {
-          tag: 1
-        };
-      }
-
-      callback(error, this);
-    });
+    this.tables = await tablesFromDatabase(db);
   }
 
   load(file) {

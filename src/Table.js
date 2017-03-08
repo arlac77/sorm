@@ -39,7 +39,6 @@ export default class Table {
     return this.ddl;
   }
 
-
   insert(attributes) {
     const qm = [];
 
@@ -65,11 +64,7 @@ export default class Table {
   }
 
   attribute(name) {
-    for (const i in this.attributes) {
-      const a = this.attributes[i];
-      if (a.name === name) return a;
-    }
-    return undefined;
+    return this.attributes.find(a => a.name === name);
   }
 
   get pk() {

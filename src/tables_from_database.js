@@ -9,9 +9,14 @@ import {
 }
 from './util';
 
+/**
+ * Reads Tables from database
+ * @pram {sqlite} db
+ * @return {Table[]} of tables
+ */
 export function tablesFromDatabase(db) {
   return new Promise((fullfill, reject) => {
-    const tables = new Map();
+    const tables = [];
 
     db.all("SELECT name,sql FROM sqlite_master WHERE type='table'", (error, rows) => {
       if (error) {
@@ -32,25 +37,25 @@ export function tablesFromDatabase(db) {
           const attributes = [];
 
           do {
-          const ma = ps.input.match(
-            /^\s*((\"[^\"]+\")|([a-z][a-z_0-9]*))\s+([a-z][a-z0-9_]*(\([^\)]+\))?)[\s,]+(.*)/i);
-          if (ma) {
-            const aname = unquote(ma[1]);
-            const type = ma[4];
-            ps.input = ma[6];
-            const constraints = [];
+            const ma = ps.input.match(
+              /^\s*((\"[^\"]+\")|([a-z][a-z_0-9]*))\s+([a-z][a-z0-9_]*(\([^\)]+\))?)[\s,]+(.*)/i);
+            if (ma) {
+              const aname = unquote(ma[1]);
+              const type = ma[4];
+              ps.input = ma[6];
+              const constraints = [];
 
-            attributes.push(new Attribute(aname, type, constraints));
+              attributes.push(new Attribute(aname, type, constraints));
 
-        } else if (ps.input === ')') {
-          break;
-        } else {
-          break;
-        }
-        }
-        while (ps.input.length > 0);
+            } else if (ps.input === ')') {
+              break;
+            } else {
+              break;
+            }
+          }
+          while (ps.input.length > 0);
 
-          tables.set(name, new Table(name, attributes));
+          tables.push(new Table(name, attributes));
         }
       });
 
