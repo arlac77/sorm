@@ -2,7 +2,6 @@
 
 'use strict';
 
-
 export function quote(str) {
   return `"${str}"`;
 }
