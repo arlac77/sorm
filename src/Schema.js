@@ -9,6 +9,10 @@ const crypto = require('crypto'),
   async = require('async');
 
 import Table from './Table';
+import {
+  tablesFromDatabase
+}
+from './TableUtils';
 
 import {
   quote, quoteIfNeeded, unquoteList, unquote
@@ -31,7 +35,6 @@ export class Schema {
   }
 
   async loadFromDatabase(db) {
-
     this.tables = await tablesFromDatabase(db);
   }
 

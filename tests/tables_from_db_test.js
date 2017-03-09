@@ -5,15 +5,16 @@ const sqlite3 = require('sqlite3'),
 
 import test from 'ava';
 import {
-  tablesFromDatabase
+  tablesFromDatabase,
+  tableFromDDL
 }
-from '../src/tables_from_database';
+from '../src/TableUtils';
 
 test('foo', t => {
   t.pass();
 });
 
-test('tables', async t => {
+test('tables from db', async t => {
   const db = new sqlite3.Database(path.join(__dirname, '../tests/fixtures/test2.db'));
   const tables = await tablesFromDatabase(db);
   const t1 = tables[0];
@@ -21,4 +22,18 @@ test('tables', async t => {
   t.is(t1.name, 't1');
   t.is(t1.attributes[0].name, 'a1');
   t.is(t1.attributes[0].type, 'char(16)');
+});
+
+test('tableFromDDL', t => {
+  const table = tableFromDDL(
+    `CREATE TABLE "comment_date" (
+      "date"
+      datetime NOT NULL,
+      "comment"
+      varchar(255) NOT NULL)`
+  );
+
+  t.is(table.name, 'comment_date');
+  t.is(table.attributes[0].name, 'date');
+  t.is(table.attributes[0].type, 'datetime');
 });
