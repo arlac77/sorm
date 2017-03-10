@@ -8,7 +8,7 @@
     "migration"
   ],
   "engines": {
-    "node": ">=6.9.4"
+    "node": ">=7.7.2"
   },
   "contributors": [
     {
@@ -27,15 +27,17 @@
   },
   "devDependencies": {
     "vows": ">=0.8.1",
-    "chai": "^3.5.0",
     "cz-conventional-changelog": "^2.0.0",
     "jsdoc-to-markdown": "^3.0.0",
     "markdown-doctest": "^0.9.1",
-    "mocha": "^3.2.0",
     "mocha-lcov-reporter": "^1.2.0",
     "nyc": "^10.1.2",
-    "rollup": "^0.41.4",
-    "semantic-release": "^6.3.6"
+    "rollup": "^0.41.5",
+    "semantic-release": "^6.3.6",
+    "ava": "^0.18.2",
+    "babel-preset-es2015-rollup": "^3.0.0",
+    "rollup-plugin-babel": "^2.7.1",
+    "rollup-plugin-multi-entry": "^2.0.1"
   },
   "module": "src/module.js",
   "main": "dist/module.js",
@@ -43,12 +45,12 @@
     "sorm": "bin/sorm"
   },
   "scripts": {
-    "cover": "nyc npm test",
-    "test": "vows tests/*.js --isolate --spec",
+    "cover": "nyc ava",
+    "test": "ava",
     "docs": "jsdoc2md -l off -t doc/README.hbs -f src/*.js >README.md",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "prepublish": "rollup --output=dist/module.js -c -- src/module.js",
-    "pretest": "npm run prepublish",
+    "pretest": "rollup -c rollup.config.test.js",
     "posttest": "markdown-doctest",
     "precover": "npm run prepublish"
   },
@@ -73,5 +75,13 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "ava": {
+    "files": [
+      "build/test-bundle.js"
+    ],
+    "require": [
+      "babel-register"
+    ]
   }
 }
