@@ -5,6 +5,10 @@
 import Table from './Table';
 import Attribute from './Attribute';
 import {
+  parseConstraints
+}
+from './ConstraintSupport';
+import {
   unquote
 }
 from './util';
@@ -23,19 +27,22 @@ export function tableFromDDL(ddl) {
 
     do {
       const ma = ps.input.match(
-        /^\s*((\"[^\"]+\")|([a-z][a-z_0-9]*))\s+([a-z][a-z0-9_]*(\([^\)]+\))?)[\s,]+(.*)/i);
+        /^\s*((\"[^\"]+\")|([a-z][a-z_0-9]*))\s+([a-z][a-z0-9_]*(\([^\)]+\))?)[\s,]?(.*)/i);
       if (ma) {
         const aname = unquote(ma[1]);
         const type = ma[4];
         ps.input = ma[6];
         const constraints = [];
 
+        //parseConstraints(ps, constraints);
+
         attributes.push(new Attribute(aname, type, constraints));
 
       } else if (ps.input === ')') {
         break;
       } else {
-        break;
+        console.log(ps.input);
+        //break;
       }
     }
     while (ps.input.length > 0);
@@ -52,14 +59,12 @@ export function tableFromDDL(ddl) {
  */
 export function tablesFromDatabase(db) {
   return new Promise((fullfill, reject) => {
-    const tables = [];
-
     db.all("SELECT name,sql FROM sqlite_master WHERE type='table'", (error, rows) => {
       if (error) {
         reject(error);
-        return;
+      } else {
+        fullfill(rows.map(row => tableFromDDL(row.sql)));
       }
-      fullfill(rows.map(row => tableFromDDL(row.sql)));
     });
   });
 

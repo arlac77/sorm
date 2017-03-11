@@ -26,14 +26,15 @@ test('tables from db', async t => {
 
 test('tableFromDDL', t => {
   const table = tableFromDDL(
-    `CREATE TABLE "comment_date" (
-      "date"
-      datetime NOT NULL,
-      "comment"
-      varchar(255) NOT NULL)`
+    `CREATE TABLE comment_date (
+      date datetime,
+      comment varchar(255))`
   );
 
   t.is(table.name, 'comment_date');
   t.is(table.attributes[0].name, 'date');
   t.is(table.attributes[0].type, 'datetime');
+
+  t.is(table.attributes[1].name, 'comment');
+  t.is(table.attributes[1].type, 'varchar(255)');
 });

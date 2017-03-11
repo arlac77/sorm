@@ -4,7 +4,6 @@
 
 
 import Attribute from './Attribute';
-import Constraint from './Constraint';
 
 
 export default class Table {

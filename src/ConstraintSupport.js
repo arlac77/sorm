@@ -13,7 +13,7 @@ const constraints = {};
 
 export function createConstraint(definition) {
   orderedConstraints.push(definition);
-  //  constraints[c.name] = c;
+  constraints[definition.name] = definition;
 }
 
 export function parseConstraints(ps, cs) {
@@ -35,7 +35,7 @@ export function parseConstraints(ps, cs) {
             str = oc.parse(m, cs, oc);
           } else {
             str = m[1];
-            cs.push(Constraint(oc));
+            cs.push(new Constraint(oc));
           }
 
           break;
@@ -116,7 +116,7 @@ createConstraint({
     if (matches[3]) {
       properties.attributes = matches[4].split(/,/).map(a => unquote(a));
     }
-    cs.push(Constraint(constraint, properties));
+    cs.push(new Constraint(constraint, properties));
     return matches[5];
   }
 });
@@ -124,11 +124,6 @@ createConstraint({
 createConstraint({
   name: 'NOT NULL',
   regex: /^not\s+null\s*(.*)/im
-});
-
-createConstraint({
-  name: 'NULL',
-  regex: /^null\s*(.*)/im
 });
 
 createConstraint({
@@ -151,7 +146,7 @@ createConstraint({
     if (matches[2]) properties.value = unquote(matches[2]);
     if (matches[3]) properties.value = unquote(matches[3]);
     if (matches[4]) properties.value = parseInt(matches[4]);
-    cs.push(Constraint(constraint, properties));
+    cs.push(new Constraint(constraint, properties));
     return matches[6];
   }
 });
@@ -173,7 +168,7 @@ createConstraint({
       `CONSTRAINT ${quoteIfNeeded(this.id)} FOREIGN KEY(${this.attributes.join(',')}) REFERENCES ${quoteIfNeeded(this.foreign_table)}(${this.foreign_attributes.join(',')})`;
   },
   parse(matches, cs, constraint) {
-    cs.push(Constraint(constraint, {
+    cs.push(new Constraint(constraint, {
       id: unquote(matches[1]),
       attributes: unquoteList(matches[5]),
       foreign_table: unquote(matches[6]),
