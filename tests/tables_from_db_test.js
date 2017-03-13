@@ -10,11 +10,8 @@ import {
 }
 from '../src/TableUtils';
 
-test('foo', t => {
-  t.pass();
-});
 
-test('tables from db', async t => {
+test('tables from db', async(t) => {
   const db = new sqlite3.Database(path.join(__dirname, '../tests/fixtures/test2.db'));
   const tables = await tablesFromDatabase(db);
   const t1 = tables[0];
@@ -23,6 +20,7 @@ test('tables from db', async t => {
   t.is(t1.attributes[0].name, 'a1');
   t.is(t1.attributes[0].type, 'char(16)');
 });
+
 
 test('tableFromDDL', t => {
   const table = tableFromDDL(

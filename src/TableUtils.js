@@ -17,35 +17,27 @@ export function tableFromDDL(ddl) {
   const sql = ddl.split(/\n/).join(' ');
   const m = sql.match(/CREATE\s+TABLE\s+((\"([^\"]+)\")|([a-z][a-z0-9_]*))\s*\((.*)/im);
   if (m) {
-    const constraints = [];
     const name = m[3] ? m[3] : m[4];
-    const ps = {
-      input: m[5]
-    };
-
+    let input = m[5];
     const attributes = [];
 
     do {
-      const ma = ps.input.match(
+      //console.log(input);
+
+      const ma = input.match(
         /^\s*((\"[^\"]+\")|([a-z][a-z_0-9]*))\s+([a-z][a-z0-9_]*(\([^\)]+\))?)[\s,]?(.*)/i);
       if (ma) {
         const aname = unquote(ma[1]);
         const type = ma[4];
-        ps.input = ma[6];
-        const constraints = [];
+        attributes.push(new Attribute(aname, type, parseConstraints(ma[6])));
 
-        //parseConstraints(ps, constraints);
-
-        attributes.push(new Attribute(aname, type, constraints));
-
-      } else if (ps.input === ')') {
+        //console.log(ma);
+        input = ma[6];
+      } else if (input === ')') {
         break;
-      } else {
-        console.log(ps.input);
-        //break;
       }
     }
-    while (ps.input.length > 0);
+    while (input);
 
     return new Table(name, attributes);
   }
@@ -53,7 +45,7 @@ export function tableFromDDL(ddl) {
 }
 
 /**
- * Reads Tables from database
+ * Reads Tables DDL from database
  * @pram {sqlite} db
  * @return {Table[]} of tables
  */
@@ -67,20 +59,4 @@ export function tablesFromDatabase(db) {
       }
     });
   });
-
-  /*
-              if (parse_constraints(ps, constraints)) {
-              } else {
-                const m = ps.input.match(
-                  /^\s*((\"[^\"]+\")|([a-z][a-z_0-9]*))\s+([a-z][a-z0-9_]*(\([^\)]+\))?)[\s,]+(.*)/i);
-                if (m) {
-
-                  const cs = [];
-                  parse_constraints(ps, cs);
-
-                  const m2 = ps.input.match(/^\s*,\s*(.*)/);
-                  if (m2) {
-                    ps.input = m2[1];
-                  }
-  */
 }

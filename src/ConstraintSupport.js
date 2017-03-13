@@ -2,7 +2,12 @@
 
 'use strict';
 
-import Constraint from './Constraint';
+import {
+  Constraint,
+  NullConstraint,
+  NotNullConstraint
+}
+from './Constraint';
 import {
   unquote, quote, quoteIfNeeded, unquoteList
 }
@@ -16,38 +21,23 @@ export function createConstraint(definition) {
   constraints[definition.name] = definition;
 }
 
-export function parseConstraints(ps, cs) {
-  let gotSomething;
-  let str = ps.input;
+export function parseConstraints(str) {
+  const constraints = [];
 
-  if (str) {
-    do {
-      gotSomething = false;
-      if (!str) break;
-
-      for (const i in orderedConstraints) {
-        const oc = orderedConstraints[i];
-        const m = str.match(oc.regex);
-
-        if (m) {
-          gotSomething = true;
-          if (oc.parse) {
-            str = oc.parse(m, cs, oc);
-          } else {
-            str = m[1];
-            cs.push(new Constraint(oc));
-          }
-
-          break;
-        }
-      }
-    }
-    while (gotSomething);
+  const notNullMatch = str.match(/^not\s+null\s*(.*)/im);
+  if (notNullMatch) {
+    str = notNullMatch[1];
+    constraints.push(NotNullConstraint);
   }
 
-  ps.input = str;
+  const nullMatch = str.match(/^null\s*(.*)/im);
 
-  return gotSomething;
+  if (nullMatch) {
+    str = nullMatch[1];
+    constraints.push(NullConstraint);
+  }
+
+  return constraints;
 }
 
 
@@ -119,11 +109,6 @@ createConstraint({
     cs.push(new Constraint(constraint, properties));
     return matches[5];
   }
-});
-
-createConstraint({
-  name: 'NOT NULL',
-  regex: /^not\s+null\s*(.*)/im
 });
 
 createConstraint({

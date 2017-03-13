@@ -3,7 +3,7 @@
 'use strict';
 
 
-export default class Constraint {
+export class Constraint {
   constructor(name, attributes, constraints) {
     Object.defineProperty(this, 'name', {
       value: name
@@ -24,3 +24,6 @@ export default class Constraint {
     return this.ddl;
   }
 }
+
+export const NotNullConstraint = new Constraint('NOT NULL');
+export const NullConstraint = new Constraint('NULL');
