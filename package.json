@@ -33,7 +33,7 @@
     "markdown-doctest": "^0.9.1",
     "mocha": "^3.4.2",
     "mocha-lcov-reporter": "^1.2.0",
-    "nyc": "^11.0.0",
+    "nyc": "^11.0.2",
     "rollup": "^0.41.4",
     "semantic-release": "^6.3.6"
   },
