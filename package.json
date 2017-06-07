@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "vows": ">=0.8.1",
-    "chai": "^4.0.0",
+    "chai": "^4.0.1",
     "cz-conventional-changelog": "^2.0.0",
     "jsdoc-to-markdown": "^3.0.0",
     "markdown-doctest": "^0.9.1",
