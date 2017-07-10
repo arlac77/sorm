@@ -34,7 +34,7 @@
     "mocha": "^3.4.2",
     "mocha-lcov-reporter": "^1.2.0",
     "nyc": "^11.0.2",
-    "rollup": "^0.43.1",
+    "rollup": "^0.45.0",
     "semantic-release": "^6.3.6"
   },
   "module": "src/module.js",
