@@ -17,6 +17,8 @@
 sorm -- simple object relational mapper for node (sqlite)
 ==============================
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/arlac77/sorm.svg)](https://greenkeeper.io/)
+
 ## SYNOPSIS
 
 This is just enough info to get you up and running.
