@@ -2,7 +2,11 @@
   "name": "sorm",
   "description": "Simple Object Relational Mapper with Node JS",
   "version": "0.0.0-semantic-release",
-  "keywords": ["sqlite3", "schema", "migration"],
+  "keywords": [
+    "sqlite3",
+    "schema",
+    "migration"
+  ],
   "engines": {
     "node": ">=8.2.1"
   },
@@ -20,13 +24,13 @@
     "sqlite3": ">=2.1"
   },
   "devDependencies": {
-    "ava": "^0.19.1",
+    "ava": "^0.21.0",
     "babel-preset-es2015-rollup": "^3.0.0",
     "cz-conventional-changelog": "^2.0.0",
     "jsdoc-to-markdown": "^3.0.0",
     "markdown-doctest": "^0.9.1",
-    "nyc": "^10.2.0",
-    "rollup": "^0.41.6",
+    "nyc": "^11.1.0",
+    "rollup": "^0.45.2",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-multi-entry": "^2.0.1",
@@ -52,8 +56,13 @@
     "url": "git@github.com:arlac77/sorm.git"
   },
   "nyc": {
-    "include": ["build/test-bundle.js", "src/**/*.js"],
-    "reporter": ["lcov"],
+    "include": [
+      "build/test-bundle.js",
+      "src/**/*.js"
+    ],
+    "reporter": [
+      "lcov"
+    ],
     "report-dir": "./build/coverage"
   },
   "template": {
@@ -65,9 +74,15 @@
     "space": true
   },
   "ava": {
-    "files": ["build/test-bundle.js"],
-    "presets": ["stage-3"],
-    "require": ["babel-register"]
+    "files": [
+      "build/test-bundle.js"
+    ],
+    "presets": [
+      "stage-3"
+    ],
+    "require": [
+      "babel-register"
+    ]
   },
   "bugs": {
     "url": "https://github.com/arlac77/sorm/issues"
