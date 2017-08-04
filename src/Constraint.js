@@ -1,11 +1,4 @@
-/* jslint node: true, esnext: true */
-
-'use strict';
-
-import {
-  unquote, quote, quoteIfNeeded, unquoteList
-}
-from './util';
+import { unquote, quote, quoteIfNeeded, unquoteList } from './util';
 
 export class Constraint {
   constructor(name) {
@@ -118,7 +111,13 @@ export class ForeignKeyContraint extends Constraint {
   }
 
   get ddl() {
-    return `CONSTRAINT ${quoteIfNeeded(this.id)} FOREIGN KEY(${this.attributes.map(a => a.name).join(',')}) REFERENCES ${quoteIfNeeded(this.foreignTable.name)}(${this.foreignAttributes.map(a => a.name).join(',')})`;
+    return `CONSTRAINT ${quoteIfNeeded(
+      this.id
+    )} FOREIGN KEY(${this.attributes
+      .map(a => a.name)
+      .join(',')}) REFERENCES ${quoteIfNeeded(
+      this.foreignTable.name
+    )}(${this.foreignAttributes.map(a => a.name).join(',')})`;
   }
 
   toJSON() {

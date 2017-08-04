@@ -2,13 +2,9 @@
   "name": "sorm",
   "description": "Simple Object Relational Mapper with Node JS",
   "version": "0.0.0-semantic-release",
-  "keywords": [
-    "sqlite3",
-    "schema",
-    "migration"
-  ],
+  "keywords": ["sqlite3", "schema", "migration"],
   "engines": {
-    "node": ">=6.9.4"
+    "node": ">=8.2.1"
   },
   "contributors": [
     {
@@ -44,42 +40,37 @@
   "scripts": {
     "cover": "nyc ava",
     "test": "ava",
-    "docs": "jsdoc2md -l off -t doc/README.hbs -f src/*.js >README.md",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "prepublish": "rollup --output=dist/module.js -c -- src/module.js",
-    "pretest": "rollup -c rollup.config.test.js",
-    "posttest": "markdown-doctest",
-    "precover": "npm run prepublish"
+    "docs": "jsdoc2md --configure doc/jsdoc.json -l off -t doc/README.hbs -f src/*.js >README.md",
+    "pretest": "rollup -c tests/rollup.config.js",
+    "posttest": "npm run prepare && markdown-doctest",
+    "precover": "rollup -c tests/rollup.config.js",
+    "prepare": "rollup -c -- src/module.js"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:arlac77/sorm.git"
   },
-  "ava": {
-    "files": [
-      "build/test-bundle.js"
-    ],
-    "require": [
-      "babel-register"
-    ]
-  },
   "nyc": {
-    "include": [
-      "build/test-bundle.js",
-      "src/**/*.js"
-    ],
-    "reporter": [
-      "lcov"
-    ],
-    "report-dir": "./coverage"
+    "include": ["build/test-bundle.js", "src/**/*.js"],
+    "reporter": ["lcov"],
+    "report-dir": "./build/coverage"
+  },
+  "template": {
+    "repository": {
+      "url": "https://github.com/arlac77/npm-package-template.git"
+    }
+  },
+  "xo": {
+    "space": true
+  },
+  "ava": {
+    "files": ["build/test-bundle.js"],
+    "presets": ["stage-3"],
+    "require": ["babel-register"]
   },
   "bugs": {
     "url": "https://github.com/arlac77/sorm/issues"
   },
-  "homepage": "https://github.com/arlac77/sorm#readme",
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  }
+  "homepage": "https://github.com/arlac77/sorm#readme"
 }

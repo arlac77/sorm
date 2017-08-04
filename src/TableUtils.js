@@ -4,18 +4,14 @@
 
 import Table from './Table';
 import Attribute from './Attribute';
-import {
-  parseConstraints
-}
-from './ConstraintSupport';
-import {
-  unquote
-}
-from './util';
+import { parseConstraints } from './ConstraintSupport';
+import { unquote } from './util';
 
 export function tableFromDDL(ddl) {
   const sql = ddl.split(/\n/).join(' ');
-  const m = sql.match(/CREATE\s+TABLE\s+((\"([^\"]+)\")|([a-z][a-z0-9_]*))\s*\((.*)/im);
+  const m = sql.match(
+    /CREATE\s+TABLE\s+((\"([^\"]+)\")|([a-z][a-z0-9_]*))\s*\((.*)/im
+  );
   if (m) {
     const name = m[3] ? m[3] : m[4];
     let input = m[5];
@@ -25,7 +21,8 @@ export function tableFromDDL(ddl) {
       //console.log(input);
 
       const ma = input.match(
-        /^\s*((\"[^\"]+\")|([a-z][a-z_0-9]*))\s+([a-z][a-z0-9_]*(\([^\)]+\))?)[\s,]?(.*)/i);
+        /^\s*((\"[^\"]+\")|([a-z][a-z_0-9]*))\s+([a-z][a-z0-9_]*(\([^\)]+\))?)[\s,]?(.*)/i
+      );
       if (ma) {
         const aname = unquote(ma[1]);
         const type = ma[4];
@@ -36,8 +33,7 @@ export function tableFromDDL(ddl) {
       } else if (input === ')') {
         break;
       }
-    }
-    while (input);
+    } while (input);
 
     return new Table(name, attributes);
   }
@@ -51,12 +47,15 @@ export function tableFromDDL(ddl) {
  */
 export function tablesFromDatabase(db) {
   return new Promise((fullfill, reject) => {
-    db.all("SELECT name,sql FROM sqlite_master WHERE type='table'", (error, rows) => {
-      if (error) {
-        reject(error);
-      } else {
-        fullfill(rows.map(row => tableFromDDL(row.sql)));
+    db.all(
+      "SELECT name,sql FROM sqlite_master WHERE type='table'",
+      (error, rows) => {
+        if (error) {
+          reject(error);
+        } else {
+          fullfill(rows.map(row => tableFromDDL(row.sql)));
+        }
       }
-    });
+    );
   });
 }

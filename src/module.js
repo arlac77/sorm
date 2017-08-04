@@ -1,7 +1,3 @@
-/* jslint node: true, esnext: true */
-
-'use strict';
-
 const crypto = require('crypto'),
   fs = require('fs'),
   path = require('path'),
@@ -10,55 +6,42 @@ const crypto = require('crypto'),
   winston = require('winston');
 
 //import Table from './Table';
-import {
-  quote, quoteIfNeeded, unquoteList, unquote
-}
-from './util';
+import { quote, quoteIfNeeded, unquoteList, unquote } from './util';
 
+const RootSchema = Object.create(
+  {
+    migrations: {},
+    load(cb) {
+      fs.readFile(this.schema_json_file, (error, data) => {
+        if (error) {
+          if (cb) cb(error);
+          return;
+        }
+        this.load_from_object(JSON.parse(data));
+        if (cb) cb(undefined, this);
+      });
+    },
+    save(callback) {
+      mkdirp(t.basedir, '0755', error =>
+        fs.writeFile(
+          this.schema_json_file,
+          JSON.stringify(t, undefined, '\t'),
+          callback
+        )
+      );
+    },
+    load_from_object(object) {
+      const tables = {};
 
-const RootSchema = Object.create({
-  migrations: {},
-  load(cb) {
-    fs.readFile(this.schema_json_file, (error, data) => {
-      if (error) {
-        if (cb) cb(error);
-        return;
+      for (const i in object.tables) {
+        const t = object.tables[i];
+        tables[i] = Table(i, t.attributes, t.constraints);
       }
-      this.load_from_object(JSON.parse(data));
-      if (cb) cb(undefined, this);
-    });
-  },
-  save(callback) {
-    mkdirp(t.basedir, '0755', error => fs.writeFile(this.schema_json_file, JSON.stringify(t, undefined, '\t'),
-      callback));
-  },
-  load_from_object(object) {
-    const tables = {};
 
-    for (const i in object.tables) {
-      const t = object.tables[i];
-      tables[i] = Table(i, t.attributes, t.constraints);
-    }
-
-    for (const j in object) {
-      this[j] = object[j];
-    }
-
-    this.tables = tables;
-
-    if (!this.versions) {
-      this.versions = {};
-      this.versions[this.schemaHash] = {
-        tag: 1
-      };
-    }
-  },
-  load_ddl_from_db(db, callback) {
-    tables_from_db(db, (error, tables) => {
-      if (error) {
-        callback(error);
-        return;
+      for (const j in object) {
+        this[j] = object[j];
       }
+
       this.tables = tables;
 
       if (!this.versions) {
@@ -67,83 +50,97 @@ const RootSchema = Object.create({
           tag: 1
         };
       }
+    },
+    load_ddl_from_db(db, callback) {
+      tables_from_db(db, (error, tables) => {
+        if (error) {
+          callback(error);
+          return;
+        }
+        this.tables = tables;
 
-      callback(error, this);
-    });
-  },
-  toJSON() {
-    return {
-      versions: this.versions,
-      migrations: this.migrations,
-      tables: this.tables
-    };
-  },
+        if (!this.versions) {
+          this.versions = {};
+          this.versions[this.schemaHash] = {
+            tag: 1
+          };
+        }
 
-  exec_ddl(db, createOptions, callback) {
-
-    if (!createOptions)
-      createOptions = {
-        'load_data': true
+        callback(error, this);
+      });
+    },
+    toJSON() {
+      return {
+        versions: this.versions,
+        migrations: this.migrations,
+        tables: this.tables
       };
+    },
 
-    const create_tables = {};
-    const alter_tables = [];
+    exec_ddl(db, createOptions, callback) {
+      if (!createOptions)
+        createOptions = {
+          load_data: true
+        };
 
-    for (const j in this.tables) {
-      const t = this.tables[j];
-      create_tables[t.name] = t;
-    }
+      const create_tables = {};
+      const alter_tables = [];
 
-    const presentHash = crypto.createHash('sha1');
-    const basedir = this.basedir;
-    const schema = this;
-
-    tables_from_db(db, (error, present_tables) => {
-      if (error) {
-        callback(error);
-        return;
+      for (const j in this.tables) {
+        const t = this.tables[j];
+        create_tables[t.name] = t;
       }
 
-      winston.info('present tables', Object.keys(present_tables));
-      winston.info('desired tables', Object.keys(create_tables));
+      const presentHash = crypto.createHash('sha1');
+      const basedir = this.basedir;
+      const schema = this;
 
-      const steps = [];
-      const pre_steps = [];
-      const post_steps = [];
+      tables_from_db(db, (error, present_tables) => {
+        if (error) {
+          callback(error);
+          return;
+        }
 
-      for (const i in present_tables) {
-        const pt = present_tables[i];
+        winston.info('present tables', Object.keys(present_tables));
+        winston.info('desired tables', Object.keys(create_tables));
 
-        presentHash.update(pt.ddl_statement());
+        const steps = [];
+        const pre_steps = [];
+        const post_steps = [];
 
-        const t = create_tables[pt.name];
-        if (t) {
-          const csql = t.ddl_statement();
+        for (const i in present_tables) {
+          const pt = present_tables[i];
 
-          if (csql === pt.ddl_statement()) {
-            delete create_tables[t.name];
-          } else {
-            // for now simply skip already existing table
-            delete create_tables[t.name];
+          presentHash.update(pt.ddl_statement());
 
-            //var backup_name = t.name + '_' + (schema.version - 1);
-            //pre_steps.push("ALTER TABLE " + t.name + " RENAME TO " + backup_name);
-            // TODO select all former attributes
-            //post_steps.push("INSERT INTO " + t.name + "(" + t.attribute_names().join(',') + ") SELECT " + t.attribute_names().join(',') + " FROM " + backup_name);
-            //post_steps.push("DROP TABLE " + backup_name);
+          const t = create_tables[pt.name];
+          if (t) {
+            const csql = t.ddl_statement();
+
+            if (csql === pt.ddl_statement()) {
+              delete create_tables[t.name];
+            } else {
+              // for now simply skip already existing table
+              delete create_tables[t.name];
+
+              //var backup_name = t.name + '_' + (schema.version - 1);
+              //pre_steps.push("ALTER TABLE " + t.name + " RENAME TO " + backup_name);
+              // TODO select all former attributes
+              //post_steps.push("INSERT INTO " + t.name + "(" + t.attribute_names().join(',') + ") SELECT " + t.attribute_names().join(',') + " FROM " + backup_name);
+              //post_steps.push("DROP TABLE " + backup_name);
+            }
           }
         }
-      }
 
-      for (const j in create_tables) {
-        const t = create_tables[j];
-        winston.info('ddl', {
-          sql: t.ddl_statement()
-        });
-        steps.push(t.ddl_statement());
-      }
+        for (const j in create_tables) {
+          const t = create_tables[j];
+          winston.info('ddl', {
+            sql: t.ddl_statement()
+          });
+          steps.push(t.ddl_statement());
+        }
 
-      /*
+        /*
         this.presentSchemaVersion = presentHash.digest("hex");
 
         var desiredSchemaVersion = schema.schemaHash;
@@ -166,94 +163,106 @@ const RootSchema = Object.create({
         }
 		*/
 
-      async.map(pre_steps, (sql, cb) => db.run(sql, cb),
-        error => {
-          if (error) {
-            callback(error, this);
-            return;
+        async.map(
+          pre_steps,
+          (sql, cb) => db.run(sql, cb),
+          error => {
+            if (error) {
+              callback(error, this);
+              return;
+            }
+
+            async.map(
+              steps.concat(post_steps),
+              (sql, cb) => db.run(sql, cb),
+              error => {
+                if (error) {
+                  callback(error, this);
+                  return;
+                }
+
+                if (createOptions.load_data) {
+                  const djs = path.join(basedir, 'data.json');
+                  fs.stat(djs, (error, stats) => {
+                    if (error) return;
+                    schema.migrate_data(
+                      db,
+                      JSON.parse(fs.readFileSync(djs)),
+                      callback
+                    );
+                  });
+                } else {
+                  callback(undefined, schema, db);
+                  return;
+                }
+              }
+            );
           }
-
-          async.map(steps.concat(post_steps), (sql, cb) => db.run(sql, cb),
-            error => {
-              if (error) {
-                callback(error, this);
-                return;
-              }
-
-              if (createOptions.load_data) {
-                const djs = path.join(basedir, 'data.json');
-                fs.stat(djs, (error, stats) => {
-                  if (error) return;
-                  schema.migrate_data(db, JSON.parse(fs.readFileSync(djs)), callback);
-                });
-              } else {
-                callback(undefined, schema, db);
-                return;
-              }
-            });
-        });
-    });
-  },
-  migrate_data(db, data_sets, callback) {
-    const update = function (table, sql, values) {
-      const v = [];
-      const l = table.pk().length;
-
-      for (let i = l; i < values.length; i++) v.push(values[i]);
-      for (let i = 0; i < l; i++) v.push(values[i]);
-
-      db.get(sql, v, error => {
-        if (error) {
-          winston.error(error, {
-            sql: sql + ' : ' + v.join(',')
-          });
-        }
+        );
       });
-    };
-
-    const insert = function (table, sql1, sql2, values) {
-      db.get(sql1, values, error => {
-        if (error) {
-          if (sql2 !== undefined) update(table, sql2, values);
-        }
-      });
-    };
-
-    for (const i in data_sets) {
-      const data = data_sets[i];
-      const t = this.table(data.table);
-
-      const updateSql = t.update_sql(data.attributes);
-      const insertSql = t.insert_sql(data.attributes);
-
-      for (const j in data.values) {
-        insert(t, insertSql, updateSql, data.values[j]);
-      }
-    }
-    callback(undefined, this, db);
-  }
-}, {
-  schema_json_file: {
-    get: function () {
-      return path.join(this.basedir, 'schema.json');
-    }
-  },
-  schemaHash: {
-    get: function () {
-      const hash = crypto.createHash('sha1');
-      for (const j in this.tables) {
-        hash.update(this.tables[j].ddl_statement());
-      }
-      return hash.digest('hex');
     },
-    tables: {
-      value: {},
-      writeable: true,
-      enumerable: true,
-      configurable: true
+    migrate_data(db, data_sets, callback) {
+      const update = function(table, sql, values) {
+        const v = [];
+        const l = table.pk().length;
+
+        for (let i = l; i < values.length; i++) v.push(values[i]);
+        for (let i = 0; i < l; i++) v.push(values[i]);
+
+        db.get(sql, v, error => {
+          if (error) {
+            winston.error(error, {
+              sql: sql + ' : ' + v.join(',')
+            });
+          }
+        });
+      };
+
+      const insert = function(table, sql1, sql2, values) {
+        db.get(sql1, values, error => {
+          if (error) {
+            if (sql2 !== undefined) update(table, sql2, values);
+          }
+        });
+      };
+
+      for (const i in data_sets) {
+        const data = data_sets[i];
+        const t = this.table(data.table);
+
+        const updateSql = t.update_sql(data.attributes);
+        const insertSql = t.insert_sql(data.attributes);
+
+        for (const j in data.values) {
+          insert(t, insertSql, updateSql, data.values[j]);
+        }
+      }
+      callback(undefined, this, db);
+    }
+  },
+  {
+    schema_json_file: {
+      get: function() {
+        return path.join(this.basedir, 'schema.json');
+      }
+    },
+    schemaHash: {
+      get: function() {
+        const hash = crypto.createHash('sha1');
+        for (const j in this.tables) {
+          hash.update(this.tables[j].ddl_statement());
+        }
+        return hash.digest('hex');
+      },
+      tables: {
+        value: {},
+        writeable: true,
+        enumerable: true,
+        configurable: true
+      }
     }
   }
-});
+);
 
 /**
  * Creates an instance of Schema.
@@ -263,7 +272,6 @@ const RootSchema = Object.create({
  * @param {options} string value holding schmema fs directory.
  */
 export function Schema(options, callback) {
-
   if (typeof options === 'string') {
     const schema = RootSchema.spawn({
       basedir: options

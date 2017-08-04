@@ -1,15 +1,13 @@
-/* jslint node: true, esnext: true */
-
 import babel from 'rollup-plugin-babel';
 import multiEntry from 'rollup-plugin-multi-entry';
 
 export default {
-  entry: 'tests/**/*_test.js',
-  external: ['ava'],
+  entry: 'tests/**/*-test.js',
+  external: ['ava', 'pratt-parser'],
   plugins: [
     babel({
       babelrc: false,
-      presets: ['es2015-rollup'],
+      presets: ['stage-3'],
       exclude: 'node_modules/**'
     }),
     multiEntry()

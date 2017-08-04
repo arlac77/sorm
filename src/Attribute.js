@@ -1,8 +1,3 @@
-/* jslint node: true, esnext: true */
-
-'use strict';
-
-
 export default class Attribute {
   constructor(name, type, constraints) {
     Object.defineProperty(this, 'name', {
@@ -17,7 +12,9 @@ export default class Attribute {
   }
 
   get ddl() {
-    return `${this.name} ${this.type} ${this.constraints.map(c => c.ddl).join(' ')}`;
+    return `${this.name} ${this.type} ${this.constraints
+      .map(c => c.ddl)
+      .join(' ')}`;
   }
 
   toJSON() {

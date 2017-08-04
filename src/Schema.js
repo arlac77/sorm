@@ -1,7 +1,3 @@
-/* jslint node: true, esnext: true */
-
-'use strict';
-
 const crypto = require('crypto'),
   fs = require('fs'),
   path = require('path'),
@@ -9,16 +5,9 @@ const crypto = require('crypto'),
   async = require('async');
 
 import Table from './Table';
-import {
-  tablesFromDatabase
-}
-from './TableUtils';
+import { tablesFromDatabase } from './TableUtils';
 
-import {
-  quote, quoteIfNeeded, unquoteList, unquote
-}
-from './util';
-
+import { quote, quoteIfNeeded, unquoteList, unquote } from './util';
 
 export class Schema {
   constructor() {
@@ -29,8 +18,9 @@ export class Schema {
 
   save(file) {
     return new Promise((fullfill, reject) =>
-      mkdirp(path.basedir(file), '0755',
-        error => fs.writeFile(file, JSON.stringify(this, undefined, '\t')))
+      mkdirp(path.basedir(file), '0755', error =>
+        fs.writeFile(file, JSON.stringify(this, undefined, '\t'))
+      )
     );
   }
 

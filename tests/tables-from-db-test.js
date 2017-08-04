@@ -1,18 +1,13 @@
-/* jslint node: true, esnext: true */
-
 const sqlite3 = require('sqlite3'),
   path = require('path');
 
 import test from 'ava';
-import {
-  tablesFromDatabase,
-  tableFromDDL
-}
-from '../src/TableUtils';
+import { tablesFromDatabase, tableFromDDL } from '../src/TableUtils';
 
-
-test('tables from db', async(t) => {
-  const db = new sqlite3.Database(path.join(__dirname, '../tests/fixtures/test2.db'));
+test('tables from db', async t => {
+  const db = new sqlite3.Database(
+    path.join(__dirname, '../tests/fixtures/test2.db')
+  );
   const tables = await tablesFromDatabase(db);
   const t1 = tables[0];
 
@@ -20,7 +15,6 @@ test('tables from db', async(t) => {
   t.is(t1.attributes[0].name, 'a1');
   t.is(t1.attributes[0].type, 'char(16)');
 });
-
 
 test('tableFromDDL', t => {
   const table = tableFromDDL(

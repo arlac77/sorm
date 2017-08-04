@@ -1,17 +1,5 @@
-/* jslint node: true, esnext: true */
-
-'use strict';
-
-import {
-  Constraint,
-  NullConstraint,
-  NotNullConstraint
-}
-from './Constraint';
-import {
-  unquote, quote, quoteIfNeeded, unquoteList
-}
-from './util';
+import { Constraint, NullConstraint, NotNullConstraint } from './Constraint';
+import { unquote, quote, quoteIfNeeded, unquoteList } from './util';
 
 export function parseConstraints(str) {
   const constraints = [];

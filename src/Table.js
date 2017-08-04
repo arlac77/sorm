@@ -1,10 +1,4 @@
-/* jslint node: true, esnext: true */
-
-'use strict';
-
-
 import Attribute from './Attribute';
-
 
 export default class Table {
   constructor(name, attributes = [], constraints = []) {
@@ -22,15 +16,18 @@ export default class Table {
   }
 
   get ddl() {
-    const a = this.attributes.map(a => a.ddl); /*, .. this.constraints.map(a => a.ddl) */
-    return `CREATE TABLE ${this.name}(${ a.join(',')})`;
+    const a = this.attributes.map(
+      a => a.ddl
+    ); /*, .. this.constraints.map(a => a.ddl) */
+    return `CREATE TABLE ${this.name}(${a.join(',')})`;
   }
 
   toJSON() {
     const o = {
       attributes: this.attributes
     };
-    if (this.constraints && this.constraints.length > 0) o.constraints = this.constraints;
+    if (this.constraints && this.constraints.length > 0)
+      o.constraints = this.constraints;
     return o;
   }
 
@@ -43,19 +40,33 @@ export default class Table {
 
     for (const k in attributes) qm.push('?');
 
-    return 'INSERT INTO ' + this.name + '(' + attributes.join(',') + ') VALUES(' + qm.join(',') + ')';
+    return (
+      'INSERT INTO ' +
+      this.name +
+      '(' +
+      attributes.join(',') +
+      ') VALUES(' +
+      qm.join(',') +
+      ')'
+    );
   }
 
   update(attributes) {
     const j = this.pk().length;
     const a = [];
     for (const i in attributes) {
-      if (i >= j)
-        a.push(attributes[i] + '=?');
+      if (i >= j) a.push(attributes[i] + '=?');
     }
 
     if (a.length === 0) return undefined;
-    return 'UPDATE ' + this.name + ' SET ' + a.join(',') + ' WHERE ' + this.pk_predicate();
+    return (
+      'UPDATE ' +
+      this.name +
+      ' SET ' +
+      a.join(',') +
+      ' WHERE ' +
+      this.pk_predicate()
+    );
   }
 
   get attributeNames() {
@@ -100,6 +111,9 @@ export default class Table {
   }
 
   next_pk(db, callback) {
-    db.get('SELECT MAX(' + this.pk()[0].name + ') + 1 FROM ' + this.name, callback);
+    db.get(
+      'SELECT MAX(' + this.pk()[0].name + ') + 1 FROM ' + this.name,
+      callback
+    );
   }
 }
