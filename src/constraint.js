@@ -25,6 +25,17 @@ export class Constraint {
 export const NotNullConstraint = new Constraint('NOT NULL');
 export const NullConstraint = new Constraint('NULL');
 
+/*
+regex: /^default\s+(('[^']*')|("[^"]*")|(\d+)|(null))(.*)/im,
+  parse(matches, cs, constraint) {
+    const properties = {};
+    if (matches[2]) properties.value = unquote(matches[2]);
+    if (matches[3]) properties.value = unquote(matches[3]);
+    if (matches[4]) properties.value = parseInt(matches[4]);
+    cs.push(new Constraint(constraint, properties));
+    return matches[6];
+  } */
+
 export class DefaultValueContraint extends Constraint {
   constructor(value = 'NULL') {
     super('DEFAULT');
@@ -43,45 +54,6 @@ export class DefaultValueContraint extends Constraint {
       value: this.value
     };
   }
-
-  /*
-  regex: /^default\s+(('[^']*')|("[^"]*")|(\d+)|(null))(.*)/im,
-    parse(matches, cs, constraint) {
-      const properties = {};
-      if (matches[2]) properties.value = unquote(matches[2]);
-      if (matches[3]) properties.value = unquote(matches[3]);
-      if (matches[4]) properties.value = parseInt(matches[4]);
-      cs.push(new Constraint(constraint, properties));
-      return matches[6];
-    } * /
-}
-
-export class PrimaryKeyContraint extends Constraint {
-  constructor(attributes, options) {
-    super('PRIMARY KEY');
-    Object.defineProperty(this, 'attributes', {
-      value: attributes
-    });
-    Object.defineProperty(this, 'options', {
-      value: options
-    });
-  }
-
-  /*
-    static parse(matches, cs, constraint) {
-      let options;
-      if (matches[2]) options = matches[2];
-
-      if (matches[3]) {
-        properties.attributes = matches[4].split(/,/).map(a => unquote(a));
-      }
-
-      cs.push(new PrimaryKeyContraint(constraint, properties));
-      return matches[5];
-    }
-  */
-
-  //regex: /^primary\s+key(\s+(asc|desc))?\s*(\(([^/)]+)\))?(.*)/im,
 
   get ddl() {
     return `${this.name} ${this.options} (${this.attributes.map(a => a.name)})`;
@@ -132,3 +104,31 @@ export class ForeignKeyContraint extends Constraint {
 }
 
 //  regex: /^CONSTRAINT\s+((\'[^\']+\')|(\"[^\"]+\")|([a-z][a-z_0-9]*))\s+FOREIGN\s+KEY\s*\(([^\)]+)\)\s*REFERENCES\s*((\'[^\']+\')|(\"[^\"]+\")|([a-z][a-z_0-9]*))\s*\(([^\)]+)\)(.*)/im,
+
+export class PrimaryKeyContraint extends Constraint {
+  constructor(attributes, options) {
+    super('PRIMARY KEY');
+    Object.defineProperty(this, 'attributes', {
+      value: attributes
+    });
+    Object.defineProperty(this, 'options', {
+      value: options
+    });
+  }
+
+  /*
+    static parse(matches, cs, constraint) {
+      let options;
+      if (matches[2]) options = matches[2];
+
+      if (matches[3]) {
+        properties.attributes = matches[4].split(/,/).map(a => unquote(a));
+      }
+
+      cs.push(new PrimaryKeyContraint(constraint, properties));
+      return matches[5];
+    }
+  */
+
+  //regex: /^primary\s+key(\s+(asc|desc))?\s*(\(([^/)]+)\))?(.*)/im,
+}

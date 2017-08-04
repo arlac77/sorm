@@ -1,5 +1,5 @@
 export default class Attribute {
-  constructor(name, type, constraints) {
+  constructor(name, type, constraints = []) {
     Object.defineProperty(this, 'name', {
       value: name
     });
