@@ -1,10 +1,6 @@
-/* jslint node: true, esnext: true */
-
-'use strict';
-
-import Table from './Table';
-import Attribute from './Attribute';
-import { parseConstraints } from './ConstraintSupport';
+import Table from './table';
+import Attribute from './attribute';
+import { parseConstraints } from './constraint-support';
 import { unquote } from './util';
 
 export function tableFromDDL(ddl) {

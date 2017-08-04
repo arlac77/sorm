@@ -1,4 +1,4 @@
-import { Constraint, NullConstraint, NotNullConstraint } from './Constraint';
+import { Constraint, NullConstraint, NotNullConstraint } from './constraint';
 import { unquote, quote, quoteIfNeeded, unquoteList } from './util';
 
 export function parseConstraints(str) {

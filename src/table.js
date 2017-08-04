@@ -1,4 +1,4 @@
-import Attribute from './Attribute';
+import Attribute from './attribute';
 
 export default class Table {
   constructor(name, attributes = [], constraints = []) {

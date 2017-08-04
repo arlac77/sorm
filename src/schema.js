@@ -1,12 +1,11 @@
-const crypto = require('crypto'),
-  fs = require('fs'),
-  path = require('path'),
-  mkdirp = require('mkdirp'),
-  async = require('async');
+const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
+const { promisify } = require('util');
+const makeDir = require('make-dir');
 
-import Table from './Table';
-import { tablesFromDatabase } from './TableUtils';
-
+import Table from './table';
+import { tablesFromDatabase } from './table-utils';
 import { quote, quoteIfNeeded, unquoteList, unquote } from './util';
 
 export class Schema {
@@ -16,29 +15,17 @@ export class Schema {
     });
   }
 
-  save(file) {
-    return new Promise((fullfill, reject) =>
-      mkdirp(path.basedir(file), '0755', error =>
-        fs.writeFile(file, JSON.stringify(this, undefined, '\t'))
-      )
-    );
+  async save(file) {
+    await makeDir(path.basedir(file), '0755');
+    return promisify(fs.writeFile)(file, JSON.stringify(this, undefined, '\t'));
   }
 
   async loadFromDatabase(db) {
     this.tables = await tablesFromDatabase(db);
   }
 
-  load(file) {
-    return new Promise((fullfill, reject) => {
-      fs.readFile(file, (error, data) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-        this.loadJSON(JSON.parse(data));
-        fullfill(this);
-      });
-    });
+  async load(file) {
+    this.loadJSON(JSON.parse(await promisify(fs.readFile)(file)));
   }
 
   loadJSON(object) {

@@ -2,7 +2,7 @@ const sqlite3 = require('sqlite3'),
   path = require('path');
 
 import test from 'ava';
-import { tablesFromDatabase, tableFromDDL } from '../src/TableUtils';
+import { tablesFromDatabase, tableFromDDL } from '../src/table-utils';
 
 test('tables from db', async t => {
   const db = new sqlite3.Database(
