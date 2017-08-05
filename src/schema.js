@@ -9,10 +9,14 @@ import { tablesFromDatabase } from './table-utils';
 import { quote, quoteIfNeeded, unquoteList, unquote } from './util';
 
 export default class Schema {
-  constructor() {
+  constructor(json) {
     Object.defineProperty(this, 'tables', {
       value: new Map()
     });
+    
+    if(json !== undefined) {
+      this.loadJSON(json);
+    }
   }
 
   async save(file) {
@@ -29,8 +33,6 @@ export default class Schema {
   }
 
   loadJSON(object) {
-    const tables = {};
-
     for (const i in object.tables) {
       const t = object.tables[i];
       this.tables.put(i, new Table(i, t.attributes, t.constraints));
