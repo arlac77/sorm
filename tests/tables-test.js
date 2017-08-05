@@ -5,14 +5,14 @@ import {
   Constraint,
   NullConstraint,
   NotNullConstraint,
-  PrimaryKeyContraint
+  PrimaryKeyConstraint
 } from '../src/constraint';
 
 const sqlite3 = require('sqlite3');
 
 function makeTopic() {
   return new Table('t1', [
-    new Attribute('a1', 'int', [NotNullConstraint, new PrimaryKeyContraint()]),
+    new Attribute('a1', 'int', [NotNullConstraint, new PrimaryKeyConstraint()]),
     new Attribute('a2', 'char(10)')
   ]);
 }
@@ -43,7 +43,7 @@ function makeAdvancedTopic() {
   return new Table('t1', [
     new Attribute('a1', 'int', [
       NotNullConstraint,
-      new PrimaryKeyContraint(undefined, ['ASC'])
+      new PrimaryKeyConstraint(undefined, ['ASC'])
     ]),
     new Attribute('a2', 'char(10)')
   ]);

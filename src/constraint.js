@@ -36,7 +36,7 @@ regex: /^default\s+(('[^']*')|("[^"]*")|(\d+)|(null))(.*)/im,
     return matches[6];
   } */
 
-export class DefaultValueContraint extends Constraint {
+export class DefaultValueConstraint extends Constraint {
   constructor(value = 'NULL') {
     super('DEFAULT');
     Object.defineProperty(this, 'value', {
@@ -68,7 +68,7 @@ export class DefaultValueContraint extends Constraint {
   }
 }
 
-export class ForeignKeyContraint extends Constraint {
+export class ForeignKeyConstraint extends Constraint {
   constructor(attributes, foreignTable, foreingAttributes) {
     super('FOREIGN KEY');
     Object.defineProperty(this, 'attributes', {
@@ -105,7 +105,7 @@ export class ForeignKeyContraint extends Constraint {
 
 //  regex: /^CONSTRAINT\s+((\'[^\']+\')|(\"[^\"]+\")|([a-z][a-z_0-9]*))\s+FOREIGN\s+KEY\s*\(([^\)]+)\)\s*REFERENCES\s*((\'[^\']+\')|(\"[^\"]+\")|([a-z][a-z_0-9]*))\s*\(([^\)]+)\)(.*)/im,
 
-export class PrimaryKeyContraint extends Constraint {
+export class PrimaryKeyConstraint extends Constraint {
   constructor(attributes, options = []) {
     super('PRIMARY KEY');
     Object.defineProperty(this, 'attributes', {
@@ -120,6 +120,13 @@ export class PrimaryKeyContraint extends Constraint {
     return `${this.name}${this.options.length === 0
       ? ''
       : ' ' + this.options.join(' ')}`;
+  }
+
+  toJSON() {
+    return {
+      name: this.name,
+      options: this.options
+    };
   }
 
   /*

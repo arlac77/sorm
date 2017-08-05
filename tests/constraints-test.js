@@ -1,13 +1,47 @@
-/* jslint node: true, esnext: true */
+import test from 'ava';
+import Attribute from '../src/attribute';
+import Table from '../src/table';
+import {
+  Constraint,
+  NullConstraint,
+  NotNullConstraint,
+  PrimaryKeyConstraint
+} from '../src/constraint';
 
-const vows = require('vows'),
-  assert = require('assert'),
-  sqlite3 = require('sqlite3'),
-  {
-    Constraint
-  } = require('../dist/module');
+test('not null basics', t => {
+  const topic = NotNullConstraint;
 
+  t.is(topic.ddl, 'NOT NULL');
+  t.is(topic.name, 'NOT NULL');
+  t.is(JSON.stringify(topic), '{"name":"NOT NULL"}');
+});
 
+test('null basics', t => {
+  const topic = NullConstraint;
+
+  t.is(topic.ddl, 'NULL');
+  t.is(topic.name, 'NULL');
+  t.is(JSON.stringify(topic), '{"name":"NULL"}');
+});
+
+test('primary key', t => {
+  const topic = new PrimaryKeyConstraint();
+
+  t.is(topic.ddl, 'PRIMARY KEY');
+  t.is(topic.name, 'PRIMARY KEY');
+  t.is(JSON.stringify(topic), '{"name":"PRIMARY KEY"}');
+});
+
+test('primary key with attributes', t => {
+  const topic = new PrimaryKeyConstraint(undefined, ['ASC']);
+
+  t.is(topic.ddl, 'PRIMARY KEY ASC');
+  t.deepEqual(topic.options, ['ASC']);
+  t.is(topic.name, 'PRIMARY KEY');
+  t.is(JSON.stringify(topic), '{"name":"PRIMARY KEY","options":["ASC"]}');
+});
+
+/*
 vows.describe('Constraint').addBatch({
   'not null from JSON': {
     topic: Constraint({
@@ -15,21 +49,6 @@ vows.describe('Constraint').addBatch({
     }),
     'ddl_statement': function (topic) {
       assert.equal(topic.ddl_statement(), "NOT NULL");
-    },
-    'name': function (topic) {
-      assert.equal(topic.name, "NOT NULL");
-    },
-    'JSON': function (topic) {
-      assert.equal(JSON.stringify(topic), '{"name":"NOT NULL"}');
-    }
-  },
-  'not null': {
-    topic: Constraint("not null"),
-    'ddl_statement': function (topic) {
-      assert.equal(topic.ddl_statement(), "NOT NULL");
-    },
-    'toString': function (topic) {
-      assert.equal(topic.toString(), "NOT NULL");
     },
     'name': function (topic) {
       assert.equal(topic.name, "NOT NULL");
@@ -48,33 +67,6 @@ vows.describe('Constraint').addBatch({
     },
     'name': function (topic) {
       assert.equal(topic.name, "NULL");
-    }
-  },
-  'NULL': {
-    topic: Constraint("NULL"),
-    'ddl_statement': function (topic) {
-      assert.equal(topic.ddl_statement(), "NULL");
-    },
-    'toString': function (topic) {
-      assert.equal(topic.toString(), "NULL");
-    },
-    'name': function (topic) {
-      assert.equal(topic.name, "NULL");
-    },
-    'JSON': function (topic) {
-      assert.equal(JSON.stringify(topic), '{"name":"NULL"}');
-    }
-  },
-  'primary key': {
-    topic: Constraint("primary key"),
-    'ddl_statement': function (topic) {
-      assert.equal(topic.ddl_statement(), "PRIMARY KEY");
-    },
-    'toString': function (topic) {
-      assert.equal(topic.toString(), "PRIMARY KEY");
-    },
-    'JSON': function (topic) {
-      assert.equal(JSON.stringify(topic), '{"name":"PRIMARY KEY"}');
     }
   },
   'primary key with attributes': {
@@ -262,4 +254,4 @@ vows.describe('Constraint').addBatch({
       assert.deepEqual(topic.foreign_attributes, ["id"]);
     }
   }
-}).export(module);
+*/
