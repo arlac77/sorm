@@ -2,7 +2,11 @@
   "name": "sorm",
   "description": "Simple Object Relational Mapper with Node JS",
   "version": "0.0.0-semantic-release",
-  "keywords": ["sqlite3", "schema", "migration"],
+  "keywords": [
+    "sqlite3",
+    "schema",
+    "migration"
+  ],
   "engines": {
     "node": ">=8.2.1"
   },
@@ -17,7 +21,7 @@
     "commander": ">=1",
     "make-dir": "^1.0.0",
     "pkginfo": ">=0.2.3",
-    "sqlite3": ">=2.1"
+    "sqlite3": "^3.1.9"
   },
   "devDependencies": {
     "ava": "^0.21.0",
@@ -52,8 +56,13 @@
     "url": "git@github.com:arlac77/sorm.git"
   },
   "nyc": {
-    "include": ["build/test-bundle.js", "src/**/*.js"],
-    "reporter": ["lcov"],
+    "include": [
+      "build/test-bundle.js",
+      "src/**/*.js"
+    ],
+    "reporter": [
+      "lcov"
+    ],
     "report-dir": "./build/coverage"
   },
   "template": {
@@ -65,9 +74,15 @@
     "space": true
   },
   "ava": {
-    "files": ["build/test-bundle.js"],
-    "presets": ["stage-3"],
-    "require": ["babel-register"]
+    "files": [
+      "build/test-bundle.js"
+    ],
+    "presets": [
+      "stage-3"
+    ],
+    "require": [
+      "babel-register"
+    ]
   },
   "bugs": {
     "url": "https://github.com/arlac77/sorm/issues"
