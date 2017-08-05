@@ -2,7 +2,6 @@ import test from 'ava';
 import Attribute from '../src/attribute';
 import Table from '../src/table';
 import {
-  Constraint,
   NullConstraint,
   NotNullConstraint,
   PrimaryKeyConstraint
@@ -18,48 +17,32 @@ test('attribute basics', t => {
   t.is(JSON.stringify(topic), '{"name":"a1","type":"int"}');
 });
 
-/*
-vows.describe('Attribute').addBatch({
-  'Attribute Values With Constraint': {
-    topic: Attribute("a1", "int", [Constraint("NOT NULL")]),
+test('attribute basics with contraint', t => {
+  const topic = new Attribute('a1', 'int', [NotNullConstraint]);
 
-    'name is present': function (topic) {
-      assert.equal(topic.name, "a1");
-    },
-    'type is present': function (topic) {
-      assert.equal(topic.type, "int");
-    },
-    'constraint is present': function (topic) {
-      assert.equal(topic.constraints[0].name, "NOT NULL");
-    },
-    'sql statement': function (topic) {
-      assert.equal(topic.ddl_statement(), "a1 int NOT NULL");
-    },
-    'JSON': function (topic) {
-      assert.equal(JSON.stringify(topic), '{"name":"a1","type":"int","constraints":[{"name":"NOT NULL"}]}');
-    }
-  },
-  'Attribute Values Multiple Constraints': {
-    topic: Attribute("a1", "int", ["not null", "primary key"]),
+  t.is(topic.name, 'a1');
+  t.is(topic.type, 'int');
+  t.deepEqual(topic.constraints, [NotNullConstraint]);
+  t.is(topic.ddl, 'a1 int NOT NULL');
+  t.is(
+    JSON.stringify(topic),
+    '{"name":"a1","type":"int","constraints":[{"name":"NOT NULL"}]}'
+  );
+});
 
-    'name is present': function (topic) {
-      assert.equal(topic.name, "a1");
-    },
-    'type is present': function (topic) {
-      assert.equal(topic.type, "int");
-    },
-    '1. constraint is present': function (topic) {
-      assert.equal(topic.constraints[0].name, "NOT NULL");
-    },
-    '2. constraint is present': function (topic) {
-      assert.equal(topic.constraints[1].name, "PRIMARY KEY");
-    },
-    'sql statement': function (topic) {
-      assert.equal(topic.ddl_statement(), "a1 int NOT NULL PRIMARY KEY");
-    },
-    'JSON': function (topic) {
-      assert.equal(JSON.stringify(topic),
-        '{"name":"a1","type":"int","constraints":[{"name":"NOT NULL"},{"name":"PRIMARY KEY"}]}');
-    }
-  }
-*/
+test('attribute basics with multiple contraint', t => {
+  const topic = new Attribute('a1', 'int', [
+    NotNullConstraint,
+    new PrimaryKeyConstraint()
+  ]);
+
+  t.is(topic.name, 'a1');
+  t.is(topic.type, 'int');
+  t.is(topic.constraints[0], NotNullConstraint);
+  t.is(topic.constraints[1].name, 'PRIMARY KEY');
+  t.is(topic.ddl, 'a1 int NOT NULL PRIMARY KEY');
+  t.is(
+    JSON.stringify(topic),
+    '{"name":"a1","type":"int","constraints":[{"name":"NOT NULL"},{"name":"PRIMARY KEY"}]}'
+  );
+});
