@@ -1,32 +1,25 @@
-/* jslint node: true, esnext: true */
+import test from 'ava';
+import Attribute from '../src/attribute';
+import Table from '../src/table';
+import {
+  Constraint,
+  NullConstraint,
+  NotNullConstraint,
+  PrimaryKeyConstraint
+} from '../src/constraint';
 
-const vows = require('vows'),
-  assert = require('assert'),
-  sqlite3 = require('sqlite3'),
-  {
-    Attribute, Constraint
-  } = require('../dist/module');
+test('attribute basics', t => {
+  const topic = new Attribute('a1', 'int');
 
+  t.is(topic.name, 'a1');
+  t.is(topic.type, 'int');
+  t.deepEqual(topic.constraints, []);
+  t.is(topic.ddl, 'a1 int');
+  t.is(JSON.stringify(topic), '{"name":"a1","type":"int"}');
+});
+
+/*
 vows.describe('Attribute').addBatch({
-  'Attribute Values': {
-    topic: Attribute("a1", "int"),
-
-    'name is present': function (topic) {
-      assert.equal(topic.name, "a1");
-    },
-    'type is present': function (topic) {
-      assert.equal(topic.type, "int");
-    },
-    'no constraint': function (topic) {
-      assert.equal(topic.constraints.length, 0);
-    },
-    'sql statement': function (topic) {
-      assert.equal(topic.ddl_statement(), "a1 int");
-    },
-    'JSON': function (topic) {
-      assert.equal(JSON.stringify(topic), '{"name":"a1","type":"int"}');
-    }
-  },
   'Attribute Values With Constraint': {
     topic: Attribute("a1", "int", [Constraint("NOT NULL")]),
 
@@ -69,4 +62,4 @@ vows.describe('Attribute').addBatch({
         '{"name":"a1","type":"int","constraints":[{"name":"NOT NULL"},{"name":"PRIMARY KEY"}]}');
     }
   }
-}).export(module);
+*/

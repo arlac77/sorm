@@ -17,11 +17,16 @@ export default class Attribute {
   }
 
   toJSON() {
-    return {
+    const json = {
       name: this.name,
-      type: this.type,
-      constraints: this.constraints
+      type: this.type
     };
+
+    if (this.constraints.length > 0) {
+      json.constraints = this.constraints;
+    }
+
+    return json;
   }
 
   toString() {
