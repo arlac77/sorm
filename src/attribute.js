@@ -12,9 +12,8 @@ export default class Attribute {
   }
 
   get ddl() {
-    return `${this.name} ${this.type} ${this.constraints
-      .map(c => c.ddl)
-      .join(' ')}`;
+    const cddl = this.constraints.map(c => c.ddl).join(' ');
+    return `${this.name} ${this.type}${cddl.length === 0 ? '' : ' ' + cddl}`;
   }
 
   toJSON() {

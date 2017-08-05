@@ -106,7 +106,7 @@ export class ForeignKeyContraint extends Constraint {
 //  regex: /^CONSTRAINT\s+((\'[^\']+\')|(\"[^\"]+\")|([a-z][a-z_0-9]*))\s+FOREIGN\s+KEY\s*\(([^\)]+)\)\s*REFERENCES\s*((\'[^\']+\')|(\"[^\"]+\")|([a-z][a-z_0-9]*))\s*\(([^\)]+)\)(.*)/im,
 
 export class PrimaryKeyContraint extends Constraint {
-  constructor(attributes, options) {
+  constructor(attributes, options = []) {
     super('PRIMARY KEY');
     Object.defineProperty(this, 'attributes', {
       value: attributes
@@ -114,6 +114,12 @@ export class PrimaryKeyContraint extends Constraint {
     Object.defineProperty(this, 'options', {
       value: options
     });
+  }
+
+  get ddl() {
+    return `${this.name}${this.options.length === 0
+      ? ''
+      : ' ' + this.options.join(' ')}`;
   }
 
   /*

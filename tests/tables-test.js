@@ -17,7 +17,7 @@ function makeTopic() {
   ]);
 }
 
-test('table basics', async t => {
+test('table basics', t => {
   const topic = makeTopic();
 
   t.is(topic.name, 't1');
@@ -34,9 +34,35 @@ test('table pk', async t => {
   t.is(topic.pk[0].name, 'a1');
 });
 
-test('table create statement', async t => {
+test('table create statement', t => {
   const topic = makeTopic();
-  t.is(topic.ddl, 'CREATE TABLE t1(a1 int NOT NULL PRIMARY KEY,a2 char(10) )');
+  t.is(topic.ddl, 'CREATE TABLE t1(a1 int NOT NULL PRIMARY KEY,a2 char(10))');
+});
+
+function makeAdvancedTopic() {
+  return new Table('t1', [
+    new Attribute('a1', 'int', [
+      NotNullConstraint,
+      new PrimaryKeyContraint(undefined, ['ASC'])
+    ]),
+    new Attribute('a2', 'char(10)')
+  ]);
+}
+
+test('table pk advanced', t => {
+  const topic = makeAdvancedTopic();
+
+  t.is(topic.pk.length, 1);
+  t.is(topic.pk[0].name, 'a1');
+  t.deepEqual(topic.pk[0].options, ['ASC']);
+});
+
+test('table create statement advanced', t => {
+  const topic = makeAdvancedTopic();
+  t.is(
+    topic.ddl,
+    'CREATE TABLE t1(a1 int NOT NULL PRIMARY KEY ASC,a2 char(10))'
+  );
 });
 
 /*
@@ -54,20 +80,11 @@ test('table create statement', async t => {
       }
     },
     'Table Values Advanced Primary Key': {
-      topic: Table('t1', [
-        Attribute('a1', 'int', ['not null', 'primary key asc']),
-        Attribute('a2', 'char(10)')
-      ]),
 
       'primary key': function(topic) {
         assert.equal(topic.pk().length, 1);
         assert.equal(topic.pk()[0].name, 'a1');
       },
-      'sql create statement': function(topic) {
-        assert.equal(
-          topic.ddl_statement(),
-          'CREATE TABLE t1(a1 int NOT NULL PRIMARY KEY ASC,a2 char(10))'
-        );
       }
     }
   })
