@@ -8,7 +8,7 @@ import Table from './table';
 import { tablesFromDatabase } from './table-utils';
 import { quote, quoteIfNeeded, unquoteList, unquote } from './util';
 
-export class Schema {
+export default class Schema {
   constructor() {
     Object.defineProperty(this, 'tables', {
       value: new Map()
