@@ -13,8 +13,8 @@ export default class Schema {
     Object.defineProperty(this, 'tables', {
       value: new Map()
     });
-    
-    if(json !== undefined) {
+
+    if (json !== undefined) {
       this.loadJSON(json);
     }
   }
@@ -35,7 +35,7 @@ export default class Schema {
   loadJSON(object) {
     for (const i in object.tables) {
       const t = object.tables[i];
-      this.tables.put(i, new Table(i, t.attributes, t.constraints));
+      this.tables.set(i, new Table(i, t.attributes, t.constraints));
     }
   }
 

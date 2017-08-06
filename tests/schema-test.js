@@ -27,8 +27,8 @@ function makeSchema() {
 test('schema basics', t => {
   const topic = makeSchema();
 
-  t.is(topic.tables.t1.name, 't1');
-  t.is(topic.tables.t1.attributes.length, 2);
+  t.is(topic.tables.get('t1').name, 't1');
+  t.is(topic.tables.get('t1').attributes.length, 2);
 });
 
 /*
