@@ -23,7 +23,8 @@
     "pkginfo": ">=0.4.1",
     "mkdirp": ">=0.3.1",
     "winston": ">=0.6.2",
-    "commander": ">=1"
+    "commander": ">=1",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "vows": ">=0.8.1",
@@ -47,10 +48,11 @@
     "test": "vows tests/*.js --isolate --spec",
     "docs": "jsdoc2md -l off -t doc/README.hbs -f src/*.js >README.md",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
-    "prepublish": "rollup --output=dist/module.js -c -- src/module.js",
+    "prepublish": "npm run snyk-protect; rollup --output=dist/module.js -c -- src/module.js",
     "pretest": "npm run prepublish",
     "posttest": "markdown-doctest",
-    "precover": "npm run prepublish"
+    "precover": "npm run prepublish",
+    "snyk-protect": "snyk protect"
   },
   "repository": {
     "type": "git",
@@ -73,5 +75,6 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  }
+  },
+  "snyk": true
 }
