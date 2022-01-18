@@ -35,7 +35,7 @@
     "mocha-lcov-reporter": "^1.2.0",
     "nyc": "^15.0.1",
     "rollup": "^2.10.4",
-    "semantic-release": "^18.0.1"
+    "semantic-release": "^19.0.2"
   },
   "module": "src/module.js",
   "main": "dist/module.js",
